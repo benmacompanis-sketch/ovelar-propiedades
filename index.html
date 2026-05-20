@@ -144,13 +144,13 @@ body.cursor-hover #cursor-dot { background:var(--rose); }
 #hero {
   position:relative; height:100vh;
   display:flex; align-items:center; justify-content:center;
-  overflow:hidden; background:#faf9f6 !important;
+  overflow:hidden; background:#080808;
 }
 .hero-bg {
   position:absolute; inset:0; z-index:0;
-  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(184,144,74,0.07) 0%, transparent 70%),
-              radial-gradient(ellipse 50% 50% at 85% 15%, rgba(190,107,130,0.06) 0%, transparent 60%),
-              #faf9f6;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(184,144,74,0.08) 0%, transparent 65%),
+              radial-gradient(ellipse 50% 50% at 85% 15%, rgba(190,107,130,0.07) 0%, transparent 55%),
+              #080808;
 }
 .hero-lines {
   position:absolute; inset:0; overflow:hidden;
@@ -196,7 +196,7 @@ body.cursor-hover #cursor-dot { background:var(--rose); }
 /* ── HERO LOGO ANIMADO ── */
 .hero-content {
   position:relative; z-index:10; text-align:center;
-  max-width:1100px; padding:0 40px; width:100%;
+  max-width:1100px; padding:0 40px 120px; width:100%;
 }
 
 .hl-eyebrow {
@@ -952,7 +952,7 @@ footer {
   .reveal, .reveal-left, .reveal-scale{ opacity:1 !important; transform:none !important; }
 }
 
-/* ── LIGHT THEME — overrides específicos ── */
+/* ── OVERRIDES TEMA MIXTO ── */
 ::-webkit-scrollbar-track { background: var(--bg2); }
 ::-webkit-scrollbar-thumb { background: var(--text); }
 
@@ -960,19 +960,43 @@ footer {
   background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.04), transparent);
 }
 
-/* Manifesto — sección oscura de contraste */
-#manifesto {
-  background: #0d0d0b;
-}
-#manifesto .manifesto-bg {
-  background: radial-gradient(ellipse 100% 80% at 50% 50%, rgba(190,107,130,0.07), transparent);
-}
-#manifesto .manifesto-quote { color: #faf9f6; }
-#manifesto .manifesto-quote em { color: var(--rose-light); }
-#manifesto .manifesto-author { color: rgba(250,249,246,0.4); }
-#manifesto .quote-mark { color: rgba(255,255,255,0.04); }
+/* Hero — contenido en blanco sobre fondo oscuro */
+.hlb-letter { color: #f4f0eb; }
+.hlb-line   { background: #f4f0eb; }
+.hlb-estudio { color: #f4f0eb; }
+.hl-eyebrow-text { color: var(--gold-light); }
+.hl-eyebrow-line { background: var(--gold-light); }
+.hero-subtitle { color: rgba(244,240,235,0.5); }
+.hero-scroll-hint span { color: rgba(244,240,235,0.4); }
+.scroll-line { background: linear-gradient(to bottom, var(--gold-light), transparent); }
+
+/* Nav — blanco sobre hero oscuro, oscuro al hacer scroll */
+#main-nav .nav-links a { color: rgba(244,240,235,0.65); }
+#main-nav .nav-links a:hover { color: #f4f0eb; }
+#main-nav .nav-links a::after { background: #f4f0eb; }
+#main-nav .nav-cta { border-color: rgba(244,240,235,0.45); color: #f4f0eb; }
+#main-nav .nav-cta::before { background: #f4f0eb; }
+#main-nav .nav-cta:hover { color: #080808; }
+
+#main-nav.scrolled .nav-links a { color: var(--text-muted); }
+#main-nav.scrolled .nav-links a:hover { color: var(--text); }
+#main-nav.scrolled .nav-links a::after { background: var(--text); }
+#main-nav.scrolled .nav-cta { border-color: var(--gold); color: var(--gold); }
+#main-nav.scrolled .nav-cta::before { background: var(--gold); }
+#main-nav.scrolled .nav-cta:hover { color: #faf9f6; }
+
+/* Nav logo: blanco sobre hero, negro sobre nav blanco */
+#main-nav .nav-logo-img { filter: invert(1); mix-blend-mode: screen; }
+#main-nav.scrolled .nav-logo-img { filter: none; mix-blend-mode: multiply; }
+
+/* Manifesto — SIN fondo negro, hereda blanco */
+#manifesto { background: transparent; }
+#manifesto .manifesto-quote { color: var(--text); }
+#manifesto .manifesto-quote em { color: var(--rose); }
+#manifesto .manifesto-author { color: var(--text-muted); }
+#manifesto .quote-mark { color: rgba(0,0,0,0.04); }
 #manifesto .manifesto-lines-h {
-  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.05), transparent);
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.06), transparent);
 }
 
 /* Footer — sección oscura de contraste */
