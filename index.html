@@ -299,11 +299,11 @@ body.cursor-hover #cursor-dot { background:var(--rose); }
 .btn-ghost:hover { border-color:var(--text); background:rgba(13,13,11,0.05); }
 
 .hero-scroll-hint {
-  position:absolute; bottom:40px; left:50%;
-  transform:translateX(-50%);
+  position:absolute; bottom:40px; left:0; right:0;
   display:flex; flex-direction:column; align-items:center; gap:8px;
-  opacity:0; animation:fade-up 0.8s ease forwards 2s;
+  opacity:0; animation:hint-in 0.8s ease forwards 2s;
 }
+@keyframes hint-in { to{ opacity:1; } }
 .hero-scroll-hint span {
   font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase;
   color:var(--text-muted);
@@ -962,14 +962,20 @@ footer {
   .nav-cta { display:none; }
 
   /* ── HERO ── */
-  .hlb-letter { font-size:clamp(3.4rem, 15vw, 11rem); }
-  .hero-content { padding:0 28px; }
-  .hl-eyebrow { margin-bottom:24px; gap:12px; }
-  .hl-eyebrow-line { width:24px !important; }
-  .hero-subtitle { margin-top:16px; margin-bottom:36px; font-size:1rem; }
+  .hlb-letter {
+    font-size:clamp(3.6rem, 16vw, 11rem);
+    animation-duration:0.8s;
+  }
+  .hero-content {
+    padding:80px 28px 60px;  /* top: nav height + air */
+  }
+  .hl-eyebrow { margin-bottom:32px; gap:12px; }
+  .hl-eyebrow-line { width:28px !important; }
+  .hlb-bottom { margin-top:8px; }
+  .hero-subtitle { margin-top:20px; margin-bottom:40px; font-size:1rem; }
   .hero-cta-group { flex-direction:column; gap:12px; }
-  .btn-primary, .btn-ghost { padding:14px 32px; width:100%; text-align:center; box-sizing:border-box; }
-  .hero-scroll-hint { bottom:24px; }
+  .btn-primary, .btn-ghost { padding:15px 32px; width:100%; text-align:center; box-sizing:border-box; }
+  .hero-scroll-hint { bottom:28px; }
 
   /* ── ABOUT ── */
   #about { padding:72px 24px; }
