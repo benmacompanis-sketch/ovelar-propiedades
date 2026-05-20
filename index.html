@@ -1090,18 +1090,51 @@ footer {
 }
 .review-text strong { color:rgba(255,255,255,0.8); font-weight:600; }
 
-/* ── MAPA ── */
-#mapa {
-  position:relative; height:420px; overflow:hidden;
+/* ── MAPAS ── */
+#mapas {
+  background:#0d0d0b; padding:60px;
+  border-top:1px solid rgba(255,255,255,0.04);
 }
-#mapa iframe {
+.mapas-title {
+  font-size:0.65rem; letter-spacing:0.4em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:32px; text-align:center;
+}
+.mapas-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:24px; max-width:900px; margin:0 auto;
+}
+.mapa-card {
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:12px; overflow:hidden;
+}
+.mapa-card-header {
+  padding:16px 20px; display:flex; align-items:center; gap:10px;
+  background:rgba(255,255,255,0.03);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.mapa-pin {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--gold); flex-shrink:0;
+}
+.mapa-sede {
+  font-family:'Inter', sans-serif; font-size:0.78rem;
+  font-weight:500; letter-spacing:0.12em; text-transform:uppercase;
+  color:rgba(255,255,255,0.75);
+}
+.mapa-address {
+  font-size:0.65rem; color:rgba(255,255,255,0.3);
+  letter-spacing:0.05em; margin-top:1px;
+}
+.mapa-frame {
+  position:relative; height:280px; overflow:hidden;
+}
+.mapa-frame iframe {
   width:100%; height:100%; border:none;
-  filter:grayscale(20%) contrast(1.05) brightness(0.95);
+  filter:grayscale(25%) contrast(1.05) brightness(0.9);
 }
-.mapa-overlay {
-  position:absolute; top:0; left:0; right:0;
-  height:60px; pointer-events:none;
-  background:linear-gradient(to bottom, #111, transparent);
+@media(max-width:700px){
+  .mapas-grid{ grid-template-columns:1fr; }
+  #mapas{ padding:48px 24px; }
 }
 
 @media(max-width:1024px){
@@ -1657,14 +1690,43 @@ footer {
   </div>
 </section>
 
-<!-- ── MAPA ── -->
-<div id="mapa">
-  <div class="mapa-overlay"></div>
-  <iframe
-    src="https://maps.google.com/maps?q=Barre+Estudio+Buenos+Aires&t=&z=14&ie=UTF8&iwloc=&output=embed"
-    allowfullscreen loading="lazy"
-    referrerpolicy="no-referrer-when-downgrade">
-  </iframe>
+<!-- ── MAPAS ── -->
+<div id="mapas">
+  <div class="mapas-title">Nuestras sedes</div>
+  <div class="mapas-grid">
+    <div class="mapa-card">
+      <div class="mapa-card-header">
+        <div class="mapa-pin"></div>
+        <div>
+          <div class="mapa-sede">Palermo</div>
+          <div class="mapa-address">[DIRECCIÓN PALERMO AQUÍ]</div>
+        </div>
+      </div>
+      <div class="mapa-frame">
+        <iframe
+          src="https://maps.google.com/maps?q=Barre+Estudio+Palermo+Buenos+Aires&t=&z=15&ie=UTF8&iwloc=&output=embed"
+          allowfullscreen loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+    <div class="mapa-card">
+      <div class="mapa-card-header">
+        <div class="mapa-pin"></div>
+        <div>
+          <div class="mapa-sede">Belgrano</div>
+          <div class="mapa-address">[DIRECCIÓN BELGRANO AQUÍ]</div>
+        </div>
+      </div>
+      <div class="mapa-frame">
+        <iframe
+          src="https://maps.google.com/maps?q=Barre+Estudio+Belgrano+Buenos+Aires&t=&z=15&ie=UTF8&iwloc=&output=embed"
+          allowfullscreen loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ── FOOTER ── -->
