@@ -84,22 +84,24 @@ body.cursor-hover #cursor-dot { background:var(--rose); }
   border-bottom:1px solid var(--border);
 }
 .nav-logo {
-  text-decoration:none; display:flex; align-items:center; flex-shrink:0;
+  text-decoration:none; display:flex; align-items:center;
+  gap:14px; flex-shrink:0;
 }
-.nav-logo-img {
-  height:58px; width:auto;
-  filter: none;
-  mix-blend-mode: multiply;
-  display:block;
+.nlc-barre {
+  font-family:'Anton', sans-serif;
+  font-size:1.55rem; letter-spacing:0.04em;
+  color:var(--text); line-height:1;
 }
-.nav-logo-text {
-  font-family:'Inter', sans-serif; font-weight:700;
-  font-size:1.1rem; letter-spacing:0.15em; text-transform:uppercase;
-  color:var(--text); text-decoration:none; line-height:1;
+.nlc-sep {
+  display:flex; flex-direction:column; align-items:center; gap:3px;
 }
-.nav-logo-text span {
-  display:block; font-size:0.55rem; font-weight:400;
-  letter-spacing:0.35em; color:var(--text-muted); margin-top:2px;
+.nlc-sep-line {
+  width:1px; height:22px; background:var(--gold); opacity:0.5;
+}
+.nlc-estudio {
+  font-family:'Inter', sans-serif; font-weight:400;
+  font-size:0.52rem; letter-spacing:0.5em; text-transform:uppercase;
+  color:var(--text-muted); white-space:nowrap;
 }
 .nav-links { display:flex; gap:40px; list-style:none; }
 .nav-links a {
@@ -870,11 +872,22 @@ footer {
   display:flex; align-items:center; justify-content:space-between;
   flex-wrap:wrap; gap:24px; max-width:100%;
 }
-.footer-logo-img {
-  height:54px; width:auto;
-  filter: none;
-  mix-blend-mode: normal;
-  opacity:0.9; display:block; margin-bottom:6px;
+.footer-logo-img { display:none; }
+.footer-logo-css {
+  display:flex; align-items:center; gap:14px; margin-bottom:8px;
+}
+.flc-barre {
+  font-family:'Anton', sans-serif;
+  font-size:1.7rem; letter-spacing:0.04em;
+  color:var(--gold); line-height:1;
+}
+.flc-sep-line {
+  width:1px; height:24px; background:var(--gold); opacity:0.4;
+}
+.flc-estudio {
+  font-family:'Inter', sans-serif; font-weight:400;
+  font-size:0.55rem; letter-spacing:0.5em; text-transform:uppercase;
+  color:rgba(250,249,246,0.55); white-space:nowrap;
 }
 .footer-logo {
   font-family:'Cormorant Garamond', serif;
@@ -970,8 +983,6 @@ footer {
 #main-nav .nav-cta::before { background: var(--gold); }
 #main-nav .nav-cta:hover { color: var(--bg); }
 
-/* Nav logo: multiply sobre fondo claro */
-#main-nav .nav-logo-img { filter: none; mix-blend-mode: multiply; }
 
 /* Manifesto — SIN fondo negro, hereda blanco */
 #manifesto { background: transparent; }
@@ -995,7 +1006,6 @@ footer {
 .footer-ig { color: rgba(250,249,246,0.45); }
 .footer-ig:hover { color: var(--rose-light); }
 .footer-ig-icon { border-color: rgba(255,255,255,0.1); }
-.footer-logo-img { filter: invert(1); mix-blend-mode: screen; opacity:0.85; }
 
 /* About accent */
 .about-accent-2 { border-color: rgba(190,107,130,0.25); }
@@ -1033,10 +1043,10 @@ footer {
 
 <!-- ── NAV ── -->
 <nav id="main-nav">
-  <a href="#hero" class="nav-logo">
-    <img src="assets/logo.png" alt="Barre Estudio" class="nav-logo-img"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-    <div class="nav-logo-text" style="display:none">BARRE<span>ESTUDIO</span></div>
+  <a href="#hero" class="nav-logo" aria-label="Barre Estudio">
+    <span class="nlc-barre">BARRE</span>
+    <span class="nlc-sep"><span class="nlc-sep-line"></span></span>
+    <span class="nlc-estudio">Estudio</span>
   </a>
   <ul class="nav-links">
     <li><a href="#about">Nosotros</a></li>
@@ -1469,9 +1479,11 @@ footer {
 <!-- ── FOOTER ── -->
 <footer>
   <div>
-    <img src="assets/logo.png" alt="Barre Estudio" class="footer-logo-img"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-    <div class="footer-logo" style="display:none">Barre Estudio</div>
+    <div class="footer-logo-css">
+      <span class="flc-barre">BARRE</span>
+      <span class="flc-sep-line"></span>
+      <span class="flc-estudio">Estudio</span>
+    </div>
     <div class="footer-tagline">Ballet · Fitness · Pilates · CABA</div>
   </div>
   <div class="footer-links">
