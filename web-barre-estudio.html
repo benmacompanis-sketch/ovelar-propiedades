@@ -947,17 +947,64 @@ footer {
   .nav-links{ display:none; }
 }
 @media(max-width:768px){
-  #planes, #galeria, #contacto, #horarios{ padding:80px 24px; }
-  #manifesto{ padding:100px 24px; }
-  .galeria-grid{
+  /* Fix scroll horizontal */
+  html, body { overflow-x:hidden; }
+
+  /* Cursor: ocultar en táctil */
+  #cursor-dot, #cursor-ring { display:none; }
+  body { cursor:auto; }
+  a, button, .clase-card, .plan-card, .gallery-item,
+  .pillar, [class*="btn"] { cursor:pointer; }
+
+  /* Partículas: desactivar en mobile (pesan mucho) */
+  #particles-canvas { display:none; }
+
+  /* Nav */
+  .nav-cta { display:none; }
+
+  /* Hero: letras más chicas y padding menor */
+  .hlb-letter { font-size:clamp(2.6rem, 12vw, 11rem); }
+  .hero-content { padding:0 20px; }
+  .hl-eyebrow-line { display:none; }
+  .hero-cta-group { flex-direction:column; gap:12px; }
+  .btn-primary, .btn-ghost { padding:14px 32px; width:100%; text-align:center; }
+
+  /* About: tag adentro del frame */
+  .about-tag { right:0; bottom:-10px; }
+
+  /* Secciones padding */
+  #about { padding:72px 24px; }
+  #planes, #galeria, #contacto, #horarios { padding:72px 24px; }
+  #manifesto { padding:80px 24px; }
+
+  /* Galería: 2 columnas simples */
+  .galeria-grid {
+    display:grid;
     grid-template-columns:1fr 1fr;
     grid-template-rows:auto;
+    gap:8px;
   }
-  .gallery-item:nth-child(1){ grid-column:1/3; grid-row:auto; }
-  .gallery-item:nth-child(n){ grid-column:auto; grid-row:auto; }
-  footer{ flex-direction:column; padding:40px 24px; text-align:center; }
-  .footer-links{ flex-wrap:wrap; justify-content:center; }
+  .gallery-item { grid-column:auto !important; grid-row:auto !important; height:160px; }
+  .gallery-item:nth-child(1) { grid-column:1/3 !important; height:200px; }
+
+  /* Footer */
+  footer { flex-direction:column; padding:40px 24px; text-align:center; }
+  .footer-links { flex-wrap:wrap; justify-content:center; }
+  .footer-logo-css { justify-content:center; }
+
+  /* Mapas */
+  .mapas-grid-3 { grid-template-columns:1fr; }
+  #mapas { padding:48px 24px; }
+
+  /* Marquee: evitar overflow */
+  .marquee-strip { overflow:hidden; }
 }
+
+@media(max-width:400px){
+  .hlb-letter { font-size:11vw; }
+  .nlc-barre { font-size:1.2rem; }
+}
+
 @media(prefers-reduced-motion:reduce){
   *, *::before, *::after{ animation:none !important; transition:none !important; }
   .reveal, .reveal-left, .reveal-scale{ opacity:1 !important; transform:none !important; }
@@ -1625,22 +1672,25 @@ footer {
 </footer>
 
 <script>
-/* ── CUSTOM CURSOR ── */
-const dot = document.getElementById('cursor-dot');
-const ring = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-(function animCursor(){
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
-  dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-  requestAnimationFrame(animCursor);
-})();
-document.querySelectorAll('a, button, .clase-card, .plan-card, .gallery-item, .pillar').forEach(el => {
-  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-});
+/* ── CUSTOM CURSOR (solo desktop) ── */
+const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+if (!isTouchDevice) {
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function animCursor(){
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  })();
+  document.querySelectorAll('a, button, .clase-card, .plan-card, .gallery-item, .pillar').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+  });
+}
 
 /* ── SCROLL PROGRESS ── */
 const progressBar = document.getElementById('scroll-progress');
@@ -1656,8 +1706,9 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 
-/* ── PARTICLES ── */
+/* ── PARTICLES (solo desktop) ── */
 const canvas = document.getElementById('particles-canvas');
+if (!isTouchDevice && window.innerWidth > 768) {
 const ctx = canvas.getContext('2d');
 let W, H, particles = [];
 function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
@@ -1690,6 +1741,7 @@ function drawParticles(){
   requestAnimationFrame(drawParticles);
 }
 drawParticles();
+} // end particles desktop-only
 
 /* ── INTERSECTION OBSERVER (reveal + counter) ── */
 const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale');
