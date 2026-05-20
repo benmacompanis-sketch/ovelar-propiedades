@@ -947,61 +947,90 @@ footer {
   .nav-links{ display:none; }
 }
 @media(max-width:768px){
-  /* Fix scroll horizontal */
+  /* Prevent overflow */
   html, body { overflow-x:hidden; }
 
-  /* Cursor: ocultar en táctil */
+  /* Cursor */
   #cursor-dot, #cursor-ring { display:none; }
   body { cursor:auto; }
-  a, button, .clase-card, .plan-card, .gallery-item,
-  .pillar, [class*="btn"] { cursor:pointer; }
+  a, button, .clase-card, .plan-card, .gallery-item, .pillar { cursor:pointer; }
 
-  /* Partículas: desactivar en mobile (pesan mucho) */
+  /* Particles */
   #particles-canvas { display:none; }
 
   /* Nav */
   .nav-cta { display:none; }
 
-  /* Hero: letras más chicas y padding menor */
-  .hlb-letter { font-size:clamp(2.6rem, 12vw, 11rem); }
-  .hero-content { padding:0 20px; }
-  .hl-eyebrow-line { display:none; }
+  /* ── HERO ── */
+  .hlb-letter { font-size:clamp(3.4rem, 15vw, 11rem); }
+  .hero-content { padding:0 28px; }
+  .hl-eyebrow { margin-bottom:24px; gap:12px; }
+  .hl-eyebrow-line { width:24px !important; }
+  .hero-subtitle { margin-top:16px; margin-bottom:36px; font-size:1rem; }
   .hero-cta-group { flex-direction:column; gap:12px; }
-  .btn-primary, .btn-ghost { padding:14px 32px; width:100%; text-align:center; }
+  .btn-primary, .btn-ghost { padding:14px 32px; width:100%; text-align:center; box-sizing:border-box; }
+  .hero-scroll-hint { bottom:24px; }
 
-  /* About: tag adentro del frame */
-  .about-tag { right:0; bottom:-10px; }
-
-  /* Secciones padding */
+  /* ── ABOUT ── */
   #about { padding:72px 24px; }
+  /* Sacar el tag flotante del flujo en mobile */
+  .about-tag {
+    position:static;
+    margin-top:24px;
+    display:inline-block;
+  }
+  .about-accent-1, .about-accent-2 { display:none; }
+
+  /* ── HORARIOS TABLE → tarjetas ── */
+  .schedule-table thead { display:none; }
+  .schedule-table, .schedule-table tbody,
+  .schedule-table tr, .schedule-table td { display:block; width:100%; }
+  .schedule-table tr {
+    padding:16px 0; border-bottom:1px solid var(--border);
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+  }
+  .schedule-table tr:last-child { border-bottom:none; }
+  .schedule-table td {
+    padding:0; border:none; font-size:0.85rem;
+  }
+  .schedule-table td:first-child {
+    font-weight:600; color:var(--text);
+    width:90px; flex-shrink:0;
+  }
+  .schedule-table td:nth-child(2) {
+    color:var(--text-muted); font-size:0.8rem;
+    flex:1;
+  }
+  .schedule-table td:nth-child(3) { flex-shrink:0; }
+  .schedule-table td:nth-child(4) { display:none; }
+
+  /* ── SECCIONES ── */
   #planes, #galeria, #contacto, #horarios { padding:72px 24px; }
   #manifesto { padding:80px 24px; }
 
-  /* Galería: 2 columnas simples */
+  /* ── GALERÍA ── */
   .galeria-grid {
-    display:grid;
     grid-template-columns:1fr 1fr;
     grid-template-rows:auto;
     gap:8px;
   }
-  .gallery-item { grid-column:auto !important; grid-row:auto !important; height:160px; }
+  .gallery-item { grid-column:auto !important; grid-row:auto !important; height:150px; }
   .gallery-item:nth-child(1) { grid-column:1/3 !important; height:200px; }
 
-  /* Footer */
+  /* ── FOOTER ── */
   footer { flex-direction:column; padding:40px 24px; text-align:center; }
   .footer-links { flex-wrap:wrap; justify-content:center; }
   .footer-logo-css { justify-content:center; }
 
-  /* Mapas */
+  /* ── MAPAS ── */
   .mapas-grid-3 { grid-template-columns:1fr; }
   #mapas { padding:48px 24px; }
 
-  /* Marquee: evitar overflow */
   .marquee-strip { overflow:hidden; }
 }
 
-@media(max-width:400px){
-  .hlb-letter { font-size:11vw; }
+@media(max-width:390px){
+  .hlb-letter { font-size:14vw; }
   .nlc-barre { font-size:1.2rem; }
 }
 
