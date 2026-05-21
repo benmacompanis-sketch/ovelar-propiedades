@@ -1,1855 +1,676 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Barre Estudio — Ballet · Fitness · Pilates · CABA</title>
-<link rel="icon" href="assets/logo.png" type="image/png">
-<link rel="apple-touch-icon" href="assets/logo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #faf9f6;
-  --bg2: #f2ede4;
-  --bg3: #e8e1d5;
-  --gold: #b8904a;
-  --gold-light: #d4aa70;
-  --rose: #be6b82;
-  --rose-light: #d4889e;
-  --text: #0d0d0b;
-  --text-muted: #7a7060;
-  --border: rgba(0,0,0,0.08);
-}
-
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-
-html { scroll-behavior:smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  overflow-x: hidden;
-  cursor: none;
-}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width:4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--gold); border-radius:2px; }
-
-/* ── SCROLL PROGRESS ── */
-#scroll-progress {
-  position:fixed; top:0; left:0; height:2px; width:0%;
-  background: linear-gradient(90deg, var(--rose), var(--gold));
-  z-index:1000;
-  transition: width 0.05s linear;
-}
-
-/* ── CUSTOM CURSOR ── */
-#cursor-dot {
-  position:fixed; width:8px; height:8px;
-  background:var(--gold); border-radius:50%;
-  pointer-events:none; z-index:9999;
-  transform:translate(-50%,-50%);
-  transition: transform 0.1s ease, background 0.3s;
-}
-#cursor-ring {
-  position:fixed; width:36px; height:36px;
-  border:1px solid rgba(201,168,124,0.5);
-  border-radius:50%; pointer-events:none; z-index:9998;
-  transform:translate(-50%,-50%);
-  transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, transform 0.08s ease;
-}
-body.cursor-hover #cursor-ring {
-  width:56px; height:56px;
-  border-color: var(--rose);
-}
-body.cursor-hover #cursor-dot { background:var(--rose); }
-
-/* ── NAV ── */
-#main-nav {
-  position:fixed; top:0; left:0; right:0; z-index:500;
-  padding:20px 60px;
-  display:flex; align-items:center; justify-content:space-between;
-  transition: background 0.4s, padding 0.4s, backdrop-filter 0.4s;
-}
-#main-nav.scrolled {
-  background: rgba(250,249,246,0.94);
-  backdrop-filter: blur(20px);
-  padding:14px 60px;
-  border-bottom:1px solid var(--border);
-}
-.nav-logo {
-  text-decoration:none; display:flex; align-items:center;
-  gap:14px; flex-shrink:0;
-}
-.nlc-barre {
-  font-family:'Anton', sans-serif;
-  font-size:1.55rem; letter-spacing:0.04em;
-  color:var(--text); line-height:1;
-}
-.nlc-sep {
-  display:flex; flex-direction:column; align-items:center; gap:3px;
-}
-.nlc-sep-line {
-  width:1px; height:22px; background:var(--gold); opacity:0.5;
-}
-.nlc-estudio {
-  font-family:'Inter', sans-serif; font-weight:400;
-  font-size:0.52rem; letter-spacing:0.5em; text-transform:uppercase;
-  color:var(--text-muted); white-space:nowrap;
-}
-.nav-links { display:flex; gap:40px; list-style:none; }
-.nav-links a {
-  color:var(--text-muted); text-decoration:none;
-  font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase;
-  position:relative; transition:color 0.3s;
-}
-.nav-links a::after {
-  content:''; position:absolute; bottom:-4px; left:0;
-  width:0; height:1px; background:var(--gold);
-  transition:width 0.3s ease;
-}
-.nav-links a:hover { color:var(--gold); }
-.nav-links a:hover::after { width:100%; }
-.nav-cta {
-  background:transparent; border:1px solid var(--gold);
-  color:var(--gold); padding:10px 28px;
-  font-family:'Inter', sans-serif; font-size:0.72rem;
-  letter-spacing:0.15em; text-transform:uppercase;
-  cursor:none; text-decoration:none;
-  transition:background 0.3s, color 0.3s;
-  position:relative; overflow:hidden;
-}
-.nav-cta::before {
-  content:''; position:absolute; inset:0;
-  background:var(--gold); transform:translateX(-101%);
-  transition:transform 0.3s ease;
-}
-.nav-cta:hover::before { transform:translateX(0); }
-.nav-cta:hover { color:var(--bg); }
-.nav-cta span { position:relative; z-index:1; }
-
-/* ── FLOATING PARTICLES ── */
-#particles-canvas {
-  position:fixed; top:0; left:0;
-  width:100%; height:100%;
-  pointer-events:none; z-index:1;
-  opacity:0.15;
-}
-
-/* ── HERO ── */
-#hero {
-  position:relative; height:100vh;
-  display:flex; align-items:center; justify-content:center;
-  overflow:hidden; background:var(--bg);
-}
-.hero-bg {
-  position:absolute; inset:0; z-index:0;
-  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(184,144,74,0.06) 0%, transparent 65%),
-              radial-gradient(ellipse 50% 50% at 85% 15%, rgba(190,107,130,0.05) 0%, transparent 55%),
-              var(--bg);
-}
-.hero-lines {
-  position:absolute; inset:0; overflow:hidden;
-}
-.hero-line {
-  position:absolute; left:0; right:0;
-  height:1px; background:linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
-  animation: line-float 10s ease-in-out infinite;
-}
-.hero-line:nth-child(1){ top:20%; animation-delay:0s; }
-.hero-line:nth-child(2){ top:40%; animation-delay:2s; }
-.hero-line:nth-child(3){ top:65%; animation-delay:4s; }
-.hero-line:nth-child(4){ top:80%; animation-delay:6s; }
-@keyframes line-float {
-  0%,100%{ opacity:0.4; transform:scaleX(0.5); }
-  50%{ opacity:1; transform:scaleX(1); }
-}
-
-.hero-orb {
-  position:absolute; border-radius:50%; filter:blur(100px);
-  animation:orb-float 12s ease-in-out infinite;
-}
-.hero-orb-1 {
-  width:500px; height:500px; top:-150px; right:-150px;
-  background:rgba(184,144,74,0.08);
-  animation-delay:0s;
-}
-.hero-orb-2 {
-  width:400px; height:400px; bottom:-100px; left:-100px;
-  background:rgba(190,107,130,0.07);
-  animation-delay:4s;
-}
-.hero-orb-3 {
-  width:300px; height:300px; top:40%; left:10%;
-  background:rgba(184,144,74,0.05);
-  animation-delay:8s;
-}
-@keyframes orb-float {
-  0%,100%{ transform:translateY(0) scale(1); }
-  50%{ transform:translateY(-40px) scale(1.08); }
-}
-
-/* ── HERO LOGO ANIMADO ── */
-.hero-content {
-  position:relative; z-index:10; text-align:center;
-  max-width:1100px; padding:0 40px; width:100%;
-}
-
-.hl-eyebrow {
-  display:flex; align-items:center; justify-content:center; gap:20px;
-  margin-bottom:32px;
-  opacity:0; animation:fade-up 0.7s ease forwards 0.2s;
-}
-.hl-eyebrow-line {
-  height:1px; background:var(--gold); opacity:0.6;
-  width:0; animation:line-grow 0.8s ease forwards 0.5s;
-}
-.hl-eyebrow-text {
-  font-size:0.65rem; letter-spacing:0.45em;
-  text-transform:uppercase; color:var(--gold); white-space:nowrap;
-}
-@keyframes line-grow { to{ width:44px; } }
-
-/* ── LOGO CSS PURO ── */
-.hero-logo-built {
-  display:inline-block; text-align:left; margin-bottom:8px;
-}
-
-/* BARRE — letras caen desde arriba */
-.hlb-barre {
-  display:block; overflow:hidden; line-height:0.88;
-}
-.hlb-letter {
-  font-family:'Anton', sans-serif;
-  font-size:clamp(4.5rem, 13vw, 11rem);
-  color:var(--text); display:inline-block;
-  transform:translateY(-106%);
-  animation:hlb-drop 0.65s cubic-bezier(0.16,1,0.3,1) forwards;
-  animation-delay:calc(0.3s + var(--i,0) * 0.08s);
-  letter-spacing:-0.01em;
-}
-@keyframes hlb-drop { to{ transform:translateY(0); } }
-
-/* Línea dibujándose + ESTUDIO aparece */
-.hlb-bottom {
-  display:flex; align-items:center; margin-top:12px; width:100%;
-}
-.hlb-line {
-  flex:1; height:3px; background:var(--text);
-  transform:scaleX(0); transform-origin:left;
-  animation:hlb-line 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.78s;
-}
-@keyframes hlb-line { to{ transform:scaleX(1); } }
-
-.hlb-estudio {
-  font-family:'Inter', sans-serif; font-weight:400;
-  font-size:clamp(0.8rem, 2vw, 1.4rem);
-  letter-spacing:0.45em; text-transform:uppercase;
-  color:var(--text); padding-left:16px; white-space:nowrap;
-  opacity:0; transform:translateX(10px);
-  animation:hlb-estudio 0.5s ease forwards 1.15s;
-}
-@keyframes hlb-estudio { to{ opacity:1; transform:translateX(0); } }
-
-.hero-subtitle {
-  font-family:'Cormorant Garamond', serif;
-  font-size:clamp(1rem, 2.2vw, 1.45rem);
-  font-weight:300; font-style:italic;
-  color:var(--text-muted); margin-top:24px; margin-bottom:52px;
-  opacity:0; animation:fade-up 0.8s ease forwards 1.4s;
-  letter-spacing:0.04em;
-}
-.hero-cta-group {
-  display:flex; gap:20px; justify-content:center; align-items:center;
-  opacity:0; animation:fade-up 0.8s ease forwards 1.7s;
-  flex-wrap:wrap;
-}
-.btn-primary {
-  display:inline-block; padding:16px 48px;
-  background:var(--text); color:var(--bg);
-  text-decoration:none; font-size:0.72rem;
-  letter-spacing:0.2em; text-transform:uppercase;
-  font-family:'Inter', sans-serif; font-weight:600;
-  position:relative; overflow:hidden; cursor:none;
-  transition:transform 0.3s ease;
-}
-.btn-primary::after {
-  content:''; position:absolute; inset:0;
-  background:rgba(0,0,0,0.12);
-  transform:translateX(-101%);
-  transition:transform 0.4s ease;
-}
-.btn-primary:hover::after { transform:translateX(0); }
-.btn-primary:hover { transform:scale(1.03); }
-
-.btn-ghost {
-  display:inline-block; padding:16px 48px;
-  border:1px solid rgba(13,13,11,0.3); color:var(--text);
-  text-decoration:none; font-size:0.72rem;
-  letter-spacing:0.2em; text-transform:uppercase;
-  font-family:'Inter', sans-serif; cursor:none;
-  transition:border-color 0.3s, background 0.3s;
-}
-.btn-ghost:hover { border-color:var(--text); background:rgba(13,13,11,0.05); }
-
-.hero-scroll-hint {
-  position:absolute; bottom:40px; left:0; right:0;
-  display:flex; flex-direction:column; align-items:center; gap:8px;
-  opacity:0; animation:hint-in 0.8s ease forwards 2s;
-}
-@keyframes hint-in { to{ opacity:1; } }
-.hero-scroll-hint span {
-  font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase;
-  color:var(--text-muted);
-}
-.scroll-line {
-  width:1px; height:60px;
-  background:linear-gradient(to bottom, var(--gold), transparent);
-  animation:scroll-pulse 2s ease-in-out infinite;
-}
-@keyframes scroll-pulse {
-  0%,100%{ transform:scaleY(1); opacity:0.6; }
-  50%{ transform:scaleY(0.5) translateY(15px); opacity:1; }
-}
-
-@keyframes char-in {
-  to{ opacity:1; transform:translateY(0); }
-}
-@keyframes fade-up {
-  to{ opacity:1; transform:translateY(0); }
-}
-
-/* ── MARQUEE STRIP ── */
-.marquee-strip {
-  overflow:hidden; padding:20px 0;
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  background:rgba(201,168,124,0.03);
-}
-.marquee-track {
-  display:flex; gap:0;
-  animation:marquee-scroll 25s linear infinite;
-  width:max-content;
-}
-.marquee-track span {
-  font-family:'Cormorant Garamond', serif;
-  font-size:0.75rem; letter-spacing:0.3em;
-  text-transform:uppercase; color:var(--text-muted);
-  padding:0 40px; white-space:nowrap;
-}
-.marquee-track .dot {
-  color:var(--gold); padding:0; font-size:0.5rem;
-  display:flex; align-items:center;
-}
-@keyframes marquee-scroll {
-  0%{ transform:translateX(0); }
-  100%{ transform:translateX(-50%); }
-}
-
-/* ── SECTIONS SHARED ── */
-section { position:relative; z-index:2; }
-
-.section-label {
-  font-size:0.65rem; letter-spacing:0.4em; text-transform:uppercase;
-  color:var(--gold); margin-bottom:24px;
-  display:flex; align-items:center; gap:16px;
-}
-.section-label::before {
-  content:''; display:block; width:32px; height:1px; background:var(--gold);
-}
-.section-title {
-  font-family:'Cormorant Garamond', serif;
-  font-size:clamp(2.5rem, 5vw, 4.5rem);
-  font-weight:300; line-height:1.05;
-}
-.section-title em {
-  font-style:italic; color:var(--rose-light);
-}
-
-/* reveal animation base */
-.reveal {
-  opacity:0; transform:translateY(40px);
-  transition:opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1);
-}
-.reveal.visible { opacity:1; transform:translateY(0); }
-.reveal-left {
-  opacity:0; transform:translateX(-40px);
-  transition:opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1);
-}
-.reveal-left.visible { opacity:1; transform:translateX(0); }
-.reveal-scale {
-  opacity:0; transform:scale(0.9);
-  transition:opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1);
-}
-.reveal-scale.visible { opacity:1; transform:scale(1); }
-
-/* ── ABOUT ── */
-#about {
-  padding:140px 60px;
-  display:grid; grid-template-columns:1fr 1fr; gap:100px;
-  align-items:center; max-width:1300px; margin:0 auto;
-}
-.about-visual {
-  position:relative; aspect-ratio:3/4;
-}
-.about-frame {
-  position:absolute; inset:0;
-  border:1px solid var(--border);
-  border-radius:2px; overflow:hidden;
-  background:linear-gradient(135deg, rgba(155,123,196,0.1), rgba(228,175,200,0.06), rgba(201,168,124,0.04));
-}
-.about-frame-inner {
-  position:absolute; inset:20px;
-  border:1px solid rgba(201,168,124,0.06);
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:16px;
-}
-.about-placeholder-icon {
-  width:80px; height:80px;
-  border:1px solid var(--border);
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  color:var(--gold); font-size:1.8rem;
-}
-.about-placeholder-text {
-  font-size:0.7rem; letter-spacing:0.2em;
-  color:var(--text-muted); text-transform:uppercase; text-align:center;
-}
-.about-accent-1 {
-  position:absolute; top:-20px; right:-20px;
-  width:120px; height:120px;
-  border:1px solid var(--border); border-radius:50%;
-  animation:spin-slow 20s linear infinite;
-}
-.about-accent-2 {
-  position:absolute; bottom:-20px; left:-20px;
-  width:80px; height:80px;
-  border:1px solid rgba(228,175,200,0.2); border-radius:50%;
-  animation:spin-slow 15s linear infinite reverse;
-}
-@keyframes spin-slow { to{ transform:rotate(360deg); } }
-
-.about-tag {
-  position:absolute; bottom:40px; right:-40px;
-  background:var(--bg2); border:1px solid var(--border);
-  padding:20px 28px;
-}
-.about-tag-num {
-  font-family:'Cormorant Garamond', serif;
-  font-size:2.5rem; font-weight:300; color:var(--gold);
-  line-height:1;
-}
-.about-tag-label {
-  font-size:0.65rem; letter-spacing:0.2em;
-  color:var(--text-muted); text-transform:uppercase;
-  margin-top:4px;
-}
-
-.about-text .section-title { margin-bottom:32px; }
-.about-description {
-  color:var(--text-muted); line-height:1.9;
-  font-size:0.95rem; margin-bottom:48px;
-}
-.about-pillars {
-  display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px;
-  margin-bottom:48px;
-}
-.pillar {
-  padding:24px 20px;
-  border:1px solid var(--border);
-  position:relative; overflow:hidden;
-  transition:border-color 0.3s;
-}
-.pillar::before {
-  content:''; position:absolute; bottom:0; left:0; right:0;
-  height:2px; background:linear-gradient(90deg, var(--rose), var(--gold));
-  transform:scaleX(0); transition:transform 0.4s ease;
-}
-.pillar:hover { border-color:rgba(201,168,124,0.3); }
-.pillar:hover::before { transform:scaleX(1); }
-.pillar-icon { font-size:1.4rem; margin-bottom:12px; display:block; }
-.pillar-name {
-  font-family:'Cormorant Garamond', serif;
-  font-size:1.1rem; font-weight:400; color:var(--text);
-  margin-bottom:6px;
-}
-.pillar-desc {
-  font-size:0.72rem; color:var(--text-muted); line-height:1.6;
-}
-
-.stats-row {
-  display:flex; gap:40px;
-}
-.stat { }
-.stat-number {
-  font-family:'Cormorant Garamond', serif;
-  font-size:2.8rem; font-weight:300;
-  color:var(--gold); line-height:1;
-}
-.stat-label {
-  font-size:0.7rem; letter-spacing:0.15em;
-  color:var(--text-muted); text-transform:uppercase;
-  margin-top:4px;
-}
-
-/* ── CLASSES / SERVICES ── */
-#clases {
-  padding:120px 0; overflow:hidden;
-  background:linear-gradient(180deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
-}
-.clases-header {
-  text-align:center; max-width:700px;
-  margin:0 auto 80px; padding:0 40px;
-}
-.clases-header .section-title { margin-bottom:20px; }
-.clases-header p {
-  color:var(--text-muted); line-height:1.8; font-size:0.95rem;
-}
-
-.clases-grid {
-  display:grid; grid-template-columns:repeat(3,1fr);
-  gap:2px; max-width:1300px; margin:0 auto; padding:0 60px;
-}
-.clase-card {
-  position:relative; padding:60px 40px;
-  background:var(--bg2); border:1px solid var(--border);
-  overflow:hidden;
-  transform-style:preserve-3d; perspective:800px;
-  cursor:none; transition:border-color 0.3s;
-}
-.clase-card::before {
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(135deg, rgba(201,168,124,0.05), transparent);
-  opacity:0; transition:opacity 0.4s;
-}
-.clase-card:hover { border-color:rgba(201,168,124,0.35); }
-.clase-card:hover::before { opacity:1; }
-
-.clase-num {
-  font-family:'Cormorant Garamond', serif;
-  font-size:5rem; font-weight:300;
-  color:rgba(201,168,124,0.08); line-height:1;
-  position:absolute; top:20px; right:30px;
-  transition:color 0.4s;
-}
-.clase-card:hover .clase-num { color:rgba(201,168,124,0.15); }
-
-.clase-icon {
-  width:56px; height:56px; border:1px solid var(--border);
-  border-radius:50%; display:flex; align-items:center;
-  justify-content:center; font-size:1.4rem;
-  margin-bottom:32px; transition:border-color 0.3s, transform 0.4s;
-}
-.clase-card:hover .clase-icon {
-  border-color:var(--gold); transform:rotate(15deg);
-}
-.clase-title {
-  font-family:'Cormorant Garamond', serif;
-  font-size:2rem; font-weight:300; color:var(--text);
-  margin-bottom:16px;
-}
-.clase-desc {
-  color:var(--text-muted); font-size:0.88rem;
-  line-height:1.8; margin-bottom:32px;
-}
-.clase-tags {
-  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:32px;
-}
-.clase-tag {
-  padding:4px 12px; border:1px solid var(--border);
-  font-size:0.65rem; letter-spacing:0.15em;
-  text-transform:uppercase; color:var(--text-muted);
-  transition:border-color 0.3s, color 0.3s;
-}
-.clase-card:hover .clase-tag { border-color:rgba(201,168,124,0.3); color:var(--gold-light); }
-.clase-bar {
-  height:1px; background:linear-gradient(90deg, var(--rose), var(--gold));
-  width:0%; transition:width 0.6s ease;
-}
-.clase-card:hover .clase-bar { width:100%; }
-
-/* ── PLANS / PRICING ── */
-#planes {
-  padding:140px 60px;
-  max-width:1300px; margin:0 auto;
-}
-.planes-header {
-  text-align:center; margin-bottom:80px;
-}
-.planes-grid {
-  display:grid; grid-template-columns:1fr 1.1fr 1fr;
-  gap:24px; align-items:start;
-}
-.plan-card {
-  padding:48px 36px; border:1px solid var(--border);
-  position:relative; overflow:hidden;
-  transition:transform 0.4s ease, border-color 0.3s;
-}
-.plan-card:hover { transform:translateY(-8px); }
-.plan-card.featured {
-  border-color:rgba(200,168,126,0.4);
-  background:linear-gradient(160deg, rgba(200,168,126,0.06), rgba(190,107,130,0.03));
-}
-.plan-card.featured::before {
-  content:'Popular'; position:absolute; top:0; right:0;
-  background:var(--gold); color:var(--bg);
-  font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase;
-  padding:6px 16px; font-weight:500;
-}
-.plan-glow {
-  position:absolute; top:0; left:50%;
-  width:200px; height:1px;
-  background:linear-gradient(90deg, transparent, var(--gold), transparent);
-  transform:translateX(-50%);
-}
-.plan-name {
-  font-family:'Cormorant Garamond', serif;
-  font-size:1.4rem; font-weight:300;
-  color:var(--text); margin-bottom:8px;
-}
-.plan-price {
-  font-family:'Cormorant Garamond', serif;
-  font-size:3.5rem; font-weight:300; color:var(--gold);
-  line-height:1; margin-bottom:8px;
-}
-.plan-price sup { font-size:1.5rem; vertical-align:top; margin-top:8px; }
-.plan-price span { font-size:1rem; color:var(--text-muted); }
-.plan-period {
-  font-size:0.72rem; letter-spacing:0.15em;
-  color:var(--text-muted); text-transform:uppercase;
-  margin-bottom:32px;
-}
-.plan-divider {
-  height:1px; background:var(--border); margin-bottom:32px;
-}
-.plan-features { list-style:none; margin-bottom:40px; }
-.plan-features li {
-  padding:10px 0; font-size:0.88rem; color:var(--text-muted);
-  display:flex; align-items:flex-start; gap:12px;
-  border-bottom:1px solid rgba(0,0,0,0.05);
-}
-.plan-features li::before {
-  content:''; display:block; width:16px; height:16px;
-  border:1px solid var(--gold); border-radius:50%;
-  flex-shrink:0; margin-top:2px;
-  background:radial-gradient(circle at 50%, rgba(201,168,124,0.3), transparent);
-}
-.plan-cta {
-  display:block; text-align:center; padding:14px;
-  border:1px solid var(--gold); color:var(--gold);
-  text-decoration:none; font-size:0.7rem;
-  letter-spacing:0.2em; text-transform:uppercase; cursor:none;
-  transition:background 0.3s, color 0.3s;
-}
-.plan-card.featured .plan-cta {
-  background:var(--gold); color:var(--bg);
-}
-.plan-cta:hover { background:var(--gold); color:var(--bg); }
-
-/* ── SCHEDULE ── */
-#horarios {
-  padding:120px 60px;
-  background:var(--bg2);
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-}
-.horarios-inner {
-  max-width:1100px; margin:0 auto;
-  display:grid; grid-template-columns:1fr 2fr; gap:80px; align-items:start;
-}
-.horarios-text .section-title { margin-bottom:24px; }
-.horarios-text p { color:var(--text-muted); line-height:1.8; margin-bottom:32px; }
-.schedule-table {
-  width:100%; border-collapse:collapse;
-}
-.schedule-table th {
-  text-align:left; padding:16px 20px;
-  font-size:0.65rem; letter-spacing:0.25em; text-transform:uppercase;
-  color:var(--gold); border-bottom:1px solid var(--border);
-  font-weight:400;
-}
-.schedule-table td {
-  padding:18px 20px; font-size:0.88rem;
-  color:var(--text-muted); border-bottom:1px solid rgba(255,255,255,0.03);
-  transition:background 0.2s;
-}
-.schedule-table tr:hover td { background:rgba(201,168,124,0.03); }
-.schedule-table .class-badge {
-  display:inline-block; padding:3px 10px;
-  font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase;
-  border-radius:20px;
-}
-.badge-ballet { background:rgba(155,123,196,0.15); color:#b89ee0; }
-.badge-fitness { background:rgba(228,175,200,0.15); color:#e4afc8; }
-.badge-pilates { background:rgba(201,168,124,0.15); color:#c9a87c; }
-.badge-combo { background:rgba(100,200,180,0.12); color:#7ecfc0; }
-
-/* ── PARALLAX QUOTE ── */
-#manifesto {
-  padding:160px 60px; text-align:center;
-  position:relative; overflow:hidden;
-}
-.manifesto-bg {
-  position:absolute; inset:0;
-  background:radial-gradient(ellipse 100% 80% at 50% 50%, rgba(190,107,130,0.04), transparent);
-}
-.manifesto-lines-h {
-  position:absolute; top:0; bottom:0; left:50%;
-  width:1px; background:linear-gradient(to bottom, transparent, var(--border), transparent);
-}
-.quote-mark {
-  font-family:'Cormorant Garamond', serif;
-  font-size:12rem; line-height:0;
-  color:rgba(201,168,124,0.06); position:absolute;
-  top:60px; left:60px; font-style:italic;
-  pointer-events:none;
-}
-.manifesto-text {
-  position:relative; max-width:900px; margin:0 auto;
-}
-.manifesto-quote {
-  font-family:'Cormorant Garamond', serif;
-  font-size:clamp(1.8rem, 4vw, 3.2rem);
-  font-weight:300; font-style:italic;
-  line-height:1.4; color:var(--text); margin-bottom:32px;
-}
-.manifesto-quote em { color:var(--gold); font-style:normal; }
-.manifesto-author {
-  font-size:0.72rem; letter-spacing:0.3em;
-  color:var(--text-muted); text-transform:uppercase;
-}
-
-/* ── GALLERY ── */
-#galeria {
-  padding:120px 60px;
-  max-width:1300px; margin:0 auto;
-}
-.galeria-header { margin-bottom:60px; }
-.galeria-grid {
-  display:grid;
-  grid-template-columns:repeat(12,1fr);
-  grid-template-rows:repeat(2,250px);
-  gap:12px;
-}
-.gallery-item {
-  overflow:hidden; position:relative; cursor:none;
-}
-.gallery-item:nth-child(1){ grid-column:1/6; grid-row:1/3; }
-.gallery-item:nth-child(2){ grid-column:6/9; grid-row:1/2; }
-.gallery-item:nth-child(3){ grid-column:9/13; grid-row:1/2; }
-.gallery-item:nth-child(4){ grid-column:6/10; grid-row:2/3; }
-.gallery-item:nth-child(5){ grid-column:10/13; grid-row:2/3; }
-
-.gallery-placeholder {
-  width:100%; height:100%;
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:12px;
-  transition:transform 0.6s ease;
-}
-.gallery-item:hover .gallery-placeholder { transform:scale(1.05); }
-.gallery-item:nth-child(1) .gallery-placeholder {
-  background:linear-gradient(135deg, rgba(190,107,130,0.18), rgba(184,144,74,0.1));
-}
-.gallery-item:nth-child(2) .gallery-placeholder {
-  background:linear-gradient(135deg, rgba(184,144,74,0.15), rgba(190,107,130,0.1));
-}
-.gallery-item:nth-child(3) .gallery-placeholder {
-  background:linear-gradient(135deg, rgba(0,0,0,0.06), rgba(190,107,130,0.1));
-}
-.gallery-item:nth-child(4) .gallery-placeholder {
-  background:linear-gradient(135deg, rgba(190,107,130,0.12), rgba(184,144,74,0.1));
-}
-.gallery-item:nth-child(5) .gallery-placeholder {
-  background:linear-gradient(135deg, rgba(184,144,74,0.18), rgba(0,0,0,0.05));
-}
-.gallery-icon { font-size:2rem; opacity:0.4; }
-.gallery-hint {
-  font-size:0.65rem; letter-spacing:0.2em;
-  color:var(--text-muted); text-transform:uppercase; opacity:0.6;
-}
-.gallery-overlay {
-  position:absolute; inset:0;
-  background:rgba(13,13,11,0.55);
-  display:flex; align-items:center; justify-content:center;
-  opacity:0; transition:opacity 0.4s;
-}
-.gallery-item:hover .gallery-overlay { opacity:1; }
-.gallery-overlay span {
-  font-size:0.7rem; letter-spacing:0.3em;
-  text-transform:uppercase; color:var(--gold);
-}
-
-/* ── CONTACT ── */
-#contacto {
-  padding:140px 60px;
-  background:var(--bg2);
-  border-top:1px solid var(--border);
-}
-.contacto-inner {
-  max-width:1200px; margin:0 auto;
-  display:grid; grid-template-columns:1fr 1fr; gap:100px;
-}
-.contacto-info .section-title { margin-bottom:40px; }
-.contact-item {
-  display:flex; align-items:flex-start; gap:20px;
-  margin-bottom:32px; padding-bottom:32px;
-  border-bottom:1px solid var(--border);
-}
-.contact-item:last-of-type { border-bottom:none; }
-.contact-icon {
-  width:44px; height:44px; border:1px solid var(--border);
-  display:flex; align-items:center; justify-content:center;
-  flex-shrink:0; font-size:1rem;
-  transition:border-color 0.3s;
-}
-.contact-item:hover .contact-icon { border-color:var(--gold); }
-.contact-label {
-  font-size:0.65rem; letter-spacing:0.2em;
-  text-transform:uppercase; color:var(--gold);
-  margin-bottom:4px;
-}
-.contact-value {
-  color:var(--text); font-size:0.92rem; line-height:1.6;
-}
-.contact-value a {
-  color:var(--text); text-decoration:none;
-  transition:color 0.3s;
-}
-.contact-value a:hover { color:var(--gold); }
-
-.contact-form { }
-.form-group { margin-bottom:24px; }
-.form-group label {
-  display:block; font-size:0.65rem;
-  letter-spacing:0.2em; text-transform:uppercase;
-  color:var(--text-muted); margin-bottom:8px;
-}
-.form-group input, .form-group textarea, .form-group select {
-  width:100%; padding:14px 18px;
-  background:rgba(0,0,0,0.02);
-  border:1px solid var(--border); color:var(--text);
-  font-family:'Inter', sans-serif; font-size:0.88rem;
-  outline:none; transition:border-color 0.3s;
-  resize:vertical;
-}
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus { border-color:rgba(201,168,124,0.5); }
-.form-group textarea { min-height:120px; }
-.form-group select {
-  appearance:none; cursor:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a8490' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:right 16px center;
-}
-.form-submit {
-  width:100%; padding:18px; background:transparent;
-  border:1px solid var(--gold); color:var(--gold);
-  font-family:'Inter', sans-serif; font-size:0.72rem;
-  letter-spacing:0.25em; text-transform:uppercase;
-  cursor:none; position:relative; overflow:hidden;
-  transition:color 0.3s;
-}
-.form-submit::before {
-  content:''; position:absolute; inset:0;
-  background:var(--gold); transform:translateY(101%);
-  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
-}
-.form-submit:hover::before { transform:translateY(0); }
-.form-submit:hover { color:var(--bg); }
-.form-submit span { position:relative; z-index:1; }
-
-/* ── FOOTER ── */
-footer {
-  padding:60px; border-top:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between;
-  flex-wrap:wrap; gap:24px; max-width:100%;
-}
-.footer-logo-img { display:none; }
-.footer-logo-css {
-  display:flex; align-items:center; gap:14px; margin-bottom:8px;
-}
-.flc-barre {
-  font-family:'Anton', sans-serif;
-  font-size:1.7rem; letter-spacing:0.04em;
-  color:var(--gold); line-height:1;
-}
-.flc-sep-line {
-  width:1px; height:24px; background:var(--gold); opacity:0.4;
-}
-.flc-estudio {
-  font-family:'Inter', sans-serif; font-weight:400;
-  font-size:0.55rem; letter-spacing:0.5em; text-transform:uppercase;
-  color:rgba(250,249,246,0.55); white-space:nowrap;
-}
-.footer-logo {
-  font-family:'Cormorant Garamond', serif;
-  font-size:1.2rem; letter-spacing:0.2em;
-  text-transform:uppercase; color:var(--gold);
-}
-.footer-tagline {
-  font-size:0.7rem; letter-spacing:0.15em;
-  color:var(--text-muted); margin-top:4px;
-}
-.footer-links { display:flex; gap:32px; }
-.footer-links a {
-  font-size:0.7rem; letter-spacing:0.15em;
-  text-transform:uppercase; color:var(--text-muted);
-  text-decoration:none; transition:color 0.3s;
-}
-.footer-links a:hover { color:var(--gold); }
-.footer-copy {
-  font-size:0.7rem; color:var(--text-muted);
-}
-.footer-ig {
-  display:flex; align-items:center; gap:10px;
-  text-decoration:none; color:var(--text-muted);
-  transition:color 0.3s; font-size:0.8rem;
-}
-.footer-ig:hover { color:var(--pink); }
-.footer-ig-icon {
-  width:32px; height:32px; border:1px solid var(--border);
-  border-radius:8px; display:flex; align-items:center;
-  justify-content:center; font-size:0.9rem;
-  transition:border-color 0.3s;
-}
-.footer-ig:hover .footer-ig-icon { border-color:var(--pink); }
-
-/* ── ANIMATED BACKGROUND LINES ── */
-.bg-lines {
-  position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.03;
-}
-.bg-lines-v {
-  position:absolute; top:0; bottom:0; width:1px;
-  background:linear-gradient(to bottom, transparent, var(--gold), transparent);
-}
-.bg-lines-v:nth-child(1){ left:20%; }
-.bg-lines-v:nth-child(2){ left:40%; }
-.bg-lines-v:nth-child(3){ left:60%; }
-.bg-lines-v:nth-child(4){ left:80%; }
-
-/* ── RESPONSIVE ── */
-@media(max-width:1024px){
-  #about{ grid-template-columns:1fr; gap:60px; padding:80px 40px; }
-  .about-visual{ max-width:400px; margin:0 auto; }
-  .planes-grid{ grid-template-columns:1fr; }
-  .plan-card.featured{ order:-1; }
-  .horarios-inner{ grid-template-columns:1fr; gap:48px; }
-  .clases-grid{ grid-template-columns:1fr; }
-  .contacto-inner{ grid-template-columns:1fr; gap:60px; }
-  #main-nav{ padding:16px 24px; }
-  #main-nav.scrolled{ padding:12px 24px; }
-  .nav-links{ display:none; }
-}
-@media(max-width:768px){
-  /* Prevent overflow */
-  html, body { overflow-x:hidden; }
-
-  /* Cursor */
-  #cursor-dot, #cursor-ring { display:none; }
-  body { cursor:auto; }
-  a, button, .clase-card, .plan-card, .gallery-item, .pillar { cursor:pointer; }
-
-  /* Particles */
-  #particles-canvas { display:none; }
-
-  /* Nav */
-  .nav-cta { display:none; }
-
-  /* ── HERO ── */
-  .hlb-letter {
-    font-size:clamp(3.6rem, 16vw, 11rem);
-    animation-duration:0.8s;
-  }
-  .hero-content {
-    padding:80px 28px 60px;  /* top: nav height + air */
-  }
-  .hl-eyebrow { margin-bottom:32px; gap:12px; }
-  .hl-eyebrow-line { width:28px !important; }
-  .hlb-bottom { margin-top:8px; }
-  .hero-subtitle { margin-top:20px; margin-bottom:40px; font-size:1rem; }
-  .hero-cta-group { flex-direction:column; gap:12px; }
-  .btn-primary, .btn-ghost { padding:15px 32px; width:100%; text-align:center; box-sizing:border-box; }
-  .hero-scroll-hint { bottom:28px; }
-
-  /* ── ABOUT ── */
-  #about { padding:72px 24px; }
-  /* Sacar el tag flotante del flujo en mobile */
-  .about-tag {
-    position:static;
-    margin-top:24px;
-    display:inline-block;
-  }
-  .about-accent-1, .about-accent-2 { display:none; }
-
-  /* ── HORARIOS TABLE → tarjetas ── */
-  .schedule-table thead { display:none; }
-  .schedule-table, .schedule-table tbody,
-  .schedule-table tr, .schedule-table td { display:block; width:100%; }
-  .schedule-table tr {
-    padding:16px 0; border-bottom:1px solid var(--border);
-    display:flex; flex-wrap:wrap; align-items:center; gap:8px;
-  }
-  .schedule-table tr:last-child { border-bottom:none; }
-  .schedule-table td {
-    padding:0; border:none; font-size:0.85rem;
-  }
-  .schedule-table td:first-child {
-    font-weight:600; color:var(--text);
-    width:90px; flex-shrink:0;
-  }
-  .schedule-table td:nth-child(2) {
-    color:var(--text-muted); font-size:0.8rem;
-    flex:1;
-  }
-  .schedule-table td:nth-child(3) { flex-shrink:0; }
-  .schedule-table td:nth-child(4) { display:none; }
-
-  /* ── SECCIONES ── */
-  #planes, #galeria, #contacto, #horarios { padding:72px 24px; }
-  #manifesto { padding:80px 24px; }
-
-  /* ── GALERÍA ── */
-  .galeria-grid {
-    grid-template-columns:1fr 1fr;
-    grid-template-rows:auto;
-    gap:8px;
-  }
-  .gallery-item { grid-column:auto !important; grid-row:auto !important; height:150px; }
-  .gallery-item:nth-child(1) { grid-column:1/3 !important; height:200px; }
-
-  /* ── FOOTER ── */
-  footer { flex-direction:column; padding:40px 24px; text-align:center; }
-  .footer-links { flex-wrap:wrap; justify-content:center; }
-  .footer-logo-css { justify-content:center; }
-
-  /* ── MAPAS ── */
-  .mapas-grid-3 { grid-template-columns:1fr; }
-  #mapas { padding:48px 24px; }
-
-  .marquee-strip { overflow:hidden; }
-}
-
-@media(max-width:390px){
-  .hlb-letter { font-size:14vw; }
-  .nlc-barre { font-size:1.2rem; }
-}
-
-@media(prefers-reduced-motion:reduce){
-  *, *::before, *::after{ animation:none !important; transition:none !important; }
-  .reveal, .reveal-left, .reveal-scale{ opacity:1 !important; transform:none !important; }
-}
-
-/* ── OVERRIDES TEMA MIXTO ── */
-::-webkit-scrollbar-track { background: var(--bg2); }
-::-webkit-scrollbar-thumb { background: var(--text); }
-
-.bg-lines-v {
-  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.04), transparent);
-}
-
-.scroll-line { background: linear-gradient(to bottom, var(--gold), transparent); }
-
-/* Nav — hero blanco, colores oscuros siempre */
-#main-nav .nav-links a { color: var(--text-muted); }
-#main-nav .nav-links a:hover { color: var(--text); }
-#main-nav .nav-links a::after { background: var(--gold); }
-#main-nav .nav-cta { border-color: var(--gold); color: var(--gold); }
-#main-nav .nav-cta::before { background: var(--gold); }
-#main-nav .nav-cta:hover { color: var(--bg); }
-
-
-/* Manifesto — SIN fondo negro, hereda blanco */
-#manifesto { background: transparent; }
-#manifesto .manifesto-quote { color: var(--text); }
-#manifesto .manifesto-quote em { color: var(--rose); }
-#manifesto .manifesto-author { color: var(--text-muted); }
-#manifesto .quote-mark { color: rgba(0,0,0,0.04); }
-#manifesto .manifesto-lines-h {
-  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.06), transparent);
-}
-
-/* Footer — sección oscura de contraste */
-footer {
-  background: #0d0d0b;
-  border-top: none;
-}
-.footer-logo { color: var(--gold) !important; }
-.footer-tagline, .footer-copy { color: rgba(250,249,246,0.38); }
-.footer-links a { color: rgba(250,249,246,0.45); }
-.footer-links a:hover { color: var(--gold); }
-.footer-ig { color: rgba(250,249,246,0.45); }
-.footer-ig:hover { color: var(--rose-light); }
-.footer-ig-icon { border-color: rgba(255,255,255,0.1); }
-
-/* About accent */
-.about-accent-2 { border-color: rgba(190,107,130,0.25); }
-
-/* Clase card hover número */
-.clase-card::before {
-  background: linear-gradient(135deg, rgba(184,144,74,0.04), transparent);
-}
-
-/* Select arrow color adaptado */
-.form-group select {
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a7060' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-}
-
-/* ── MAPAS ── */
-#mapas {
-  background:var(--bg); padding:60px;
-  border-top:1px solid var(--border);
-}
-.mapas-title {
-  font-size:0.65rem; letter-spacing:0.4em; text-transform:uppercase;
-  color:var(--gold); margin-bottom:32px; text-align:center;
-}
-.mapas-grid {
-  display:grid; gap:20px; margin:0 auto;
-}
-.mapas-grid-3 {
-  grid-template-columns:repeat(3,1fr); max-width:1100px;
-}
-.mapa-card {
-  border:1px solid var(--border);
-  border-radius:12px; overflow:hidden;
-}
-.mapa-card-header {
-  padding:16px 20px; display:flex; align-items:center; gap:10px;
-  background:var(--bg2);
-  border-bottom:1px solid var(--border);
-}
-.mapa-pin {
-  width:8px; height:8px; border-radius:50%;
-  background:var(--gold); flex-shrink:0;
-}
-.mapa-sede {
-  font-family:'Inter', sans-serif; font-size:0.78rem;
-  font-weight:500; letter-spacing:0.12em; text-transform:uppercase;
-  color:var(--text);
-}
-.mapa-address {
-  font-size:0.65rem; color:var(--text-muted);
-  letter-spacing:0.05em; margin-top:1px;
-}
-.mapa-frame {
-  position:relative; height:280px; overflow:hidden;
-}
-.mapa-frame iframe {
-  width:100%; height:100%; border:none;
-  filter:grayscale(25%) contrast(1.05) brightness(0.9);
-}
-@media(max-width:900px){
-  .mapas-grid-3{ grid-template-columns:1fr 1fr; }
-}
-@media(max-width:600px){
-  .mapas-grid-3{ grid-template-columns:1fr; }
-  #mapas{ padding:48px 24px; }
-}
-
-@media(max-width:1024px){
-  .reviews-grid{ grid-template-columns:repeat(2,1fr); }
-}
-@media(max-width:600px){
-  .reviews-grid{ grid-template-columns:1fr; }
-  #reviews{ padding:60px 24px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ovelar Propiedades | Compra y Venta en Buenos Aires</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: #0A1420; color: #fff; overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0A1420; }
+    ::-webkit-scrollbar-thumb { background: #C9A84C; border-radius: 3px; }
+    ::selection { background: #C9A84C; color: #0A1420; }
+
+    :root {
+      --gold: #C9A84C; --gold-l: #E2C675;
+      --navy: #0A1420; --navy-m: #0E1C2E; --navy-c: #162438;
+      --muted: #6B7F9A; --off: #EDF0F7;
+      --border: rgba(255,255,255,0.07); --pad: clamp(80px,10vw,130px);
+    }
+
+    /* ── LIQUID GLASS ── */
+    .lg {
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+      position: relative; overflow: hidden;
+    }
+    .lg::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.4px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.08) 25%,
+        rgba(255,255,255,0) 50%, rgba(255,255,255,0.08) 75%, rgba(255,255,255,0.28) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+    }
+
+    /* ── NAVBAR ── */
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 18px clamp(18px,4vw,60px); }
+    .nav-bar { border-radius: 14px; padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .nav-logo svg { width: 30px; height: 30px; flex-shrink: 0; }
+    .nav-logo-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: #fff; letter-spacing: 0.04em; line-height: 1; }
+    .nav-logo-sub { font-size: 0.6rem; font-weight: 400; color: rgba(201,168,76,0.8); letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-top: 1px; }
+    .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+    .nav-links a { font-size: 0.84rem; font-weight: 400; color: rgba(255,255,255,0.72); text-decoration: none; transition: color 0.25s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-btn { background: #fff; color: #000; border: none; border-radius: 8px; padding: 9px 22px; font-size: 0.84rem; font-weight: 500; cursor: pointer; text-decoration: none; font-family: 'Inter', sans-serif; transition: background 0.2s; white-space: nowrap; }
+    .nav-btn:hover { background: #e5e7eb; }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-toggle span { display: block; width: 22px; height: 1.5px; background: #fff; }
+
+    /* ── HERO ── */
+    .hero { position: relative; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+    .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .hero-fade { position: absolute; bottom: 0; left: 0; right: 0; height: 60%; background: linear-gradient(to top, rgba(10,20,32,0.65) 0%, transparent 100%); z-index: 1; pointer-events: none; }
+    .hero-content { position: relative; z-index: 2; padding: 0 clamp(18px,4vw,60px) clamp(42px,6vw,62px); flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 32px; }
+    .hero-heading { font-size: clamp(2.6rem,6vw,5.5rem); font-weight: 400; line-height: 1.05; letter-spacing: -0.04em; color: #fff; margin-bottom: 18px; }
+    .hc { display: inline-block; opacity: 0; transform: translateX(-18px); transition: opacity 500ms, transform 500ms; }
+    .hero-sub { font-size: clamp(0.9rem,1.4vw,1.05rem); font-weight: 300; color: #d1d5db; margin-bottom: 26px; max-width: 460px; line-height: 1.65; opacity: 0; transition: opacity 1000ms; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; opacity: 0; transition: opacity 1000ms; }
+    .hbtn-w { background: #fff; color: #000; border: none; border-radius: 8px; padding: 13px 30px; font-size: 0.88rem; font-weight: 500; cursor: pointer; text-decoration: none; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+    .hbtn-w:hover { background: #e5e7eb; }
+    .hbtn-g { border-radius: 8px; padding: 13px 30px; border: 1px solid rgba(255,255,255,0.2); font-size: 0.88rem; font-weight: 500; color: #fff; cursor: pointer; text-decoration: none; font-family: 'Inter', sans-serif; transition: all 0.3s; }
+    .hbtn-g:hover { background: #fff !important; color: #000 !important; }
+    .hero-right { display: flex; align-items: flex-end; justify-content: flex-end; }
+    .hero-tag { border: 1px solid rgba(255,255,255,0.2); border-radius: 14px; padding: 14px 26px; font-size: clamp(1rem,2vw,1.4rem); font-weight: 300; color: #fff; opacity: 0; transition: opacity 1000ms; }
+
+    /* ── PROPERTIES ── */
+    .props { padding: var(--pad) clamp(18px,4vw,60px); background: var(--navy-m); }
+    .props-hdr { max-width: 1200px; margin: 0 auto 40px; }
+    .stag { color: var(--gold); font-size: 0.73rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; display: block; }
+    .props-hdr h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem,4vw,2.8rem); font-weight: 700; margin-bottom: 22px; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tab { background: transparent; border: 1px solid rgba(255,255,255,0.14); color: var(--muted); padding: 7px 18px; border-radius: 100px; font-size: 0.8rem; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.3s; }
+    .tab.on { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+    .tab:hover:not(.on) { border-color: rgba(255,255,255,0.35); color: #fff; }
+
+    .pgrid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .pcard { background: var(--navy-c); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform 0.4s, box-shadow 0.4s; cursor: pointer; }
+    .pcard:hover { transform: translateY(-7px); box-shadow: 0 28px 64px rgba(0,0,0,0.45); }
+    .pimg { height: 195px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .pimg-inner { position: absolute; inset: 0; transition: transform 0.6s ease; }
+    .pcard:hover .pimg-inner { transform: scale(1.06); }
+    .pimg > svg { position: relative; z-index: 1; width: 44px; height: 44px; opacity: 0.15; fill: none; stroke: #fff; stroke-width: 1; }
+    .pbadge { position: absolute; top: 14px; left: 14px; z-index: 2; padding: 4px 12px; border-radius: 100px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+    .bv { background: var(--gold); color: var(--navy); }
+    .ba { background: rgba(0,0,0,0.45); backdrop-filter: blur(6px); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .pbody { padding: 20px; }
+    .pprice { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: var(--gold); margin-bottom: 5px; }
+    .ptype { font-size: 0.88rem; font-weight: 500; margin-bottom: 4px; }
+    .phood-txt { font-size: 0.8rem; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 4px; }
+    .pfeats { display: flex; gap: 5px; flex-wrap: wrap; }
+    .pfeat { background: rgba(255,255,255,0.05); padding: 3px 9px; border-radius: 4px; font-size: 0.73rem; color: var(--muted); }
+    .pfoot { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .parea { font-size: 0.78rem; color: var(--muted); }
+    .pcta-btn { font-size: 0.77rem; font-weight: 500; color: var(--gold); background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: color 0.2s; padding: 0; }
+    .pcta-btn:hover { color: var(--gold-l); }
+
+    .c1{background:linear-gradient(140deg,#0f2540,#1a3a55);}
+    .c2{background:linear-gradient(140deg,#1a0d2e,#2e1850);}
+    .c3{background:linear-gradient(140deg,#0d1f18,#163325);}
+    .c4{background:linear-gradient(140deg,#261508,#3d2210);}
+    .c5{background:linear-gradient(140deg,#0f1a2e,#1a2d50);}
+    .c6{background:linear-gradient(140deg,#1a0d0d,#3d1a1a);}
+
+    .props-more { max-width: 1200px; margin: 36px auto 0; text-align: center; }
+    .props-note { font-size: 0.82rem; color: var(--muted); margin-bottom: 18px; }
+
+    /* ── PROPERTY MODAL ── */
+    .mbg {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(5,12,22,0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .mbg.open { opacity: 1; pointer-events: all; }
+    .mbox {
+      background: #101E30; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; overflow: hidden;
+      max-width: 880px; width: 100%; max-height: 92vh;
+      display: grid; grid-template-columns: 1.1fr 0.9fr;
+      transform: scale(0.95) translateY(16px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      overflow-y: auto;
+    }
+    .mbg.open .mbox { transform: scale(1) translateY(0); }
+    .mimg-side { position: sticky; top: 0; height: 480px; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; }
+    .mimg-bg-el { position: absolute; inset: 0; transition: transform 0.6s ease; }
+    .mimg-side:hover .mimg-bg-el { transform: scale(1.04); }
+    .mimg-overlay { position: relative; z-index: 2; text-align: center; }
+    .mimg-overlay svg { width: 56px; height: 56px; fill: none; stroke: rgba(255,255,255,0.25); stroke-width: 1; margin-bottom: 10px; }
+    .mimg-note { font-size: 0.78rem; color: rgba(255,255,255,0.35); letter-spacing: 0.05em; }
+    .mbadge-modal { position: absolute; top: 16px; left: 16px; z-index: 3; padding: 5px 14px; border-radius: 100px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+    .mclose {
+      position: absolute; top: 16px; right: 16px; z-index: 10;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+      color: #fff; font-size: 1.2rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; backdrop-filter: blur(4px);
+    }
+    .mclose:hover { background: rgba(255,255,255,0.2); }
+    .mdetails { padding: 36px 32px; display: flex; flex-direction: column; gap: 0; overflow-y: auto; }
+    .mprice-modal { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+    .mtitle-modal { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; }
+    .mhood-modal { font-size: 0.85rem; color: var(--muted); display: flex; align-items: center; gap: 5px; margin-bottom: 20px; }
+    .mhood-modal svg { width: 14px; height: 14px; fill: none; stroke: var(--gold); stroke-width: 2; flex-shrink: 0; }
+    .mfeats-modal { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+    .mfeat { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.09); padding: 5px 12px; border-radius: 5px; font-size: 0.78rem; color: var(--off); }
+    .marea-modal { display: flex; align-items: center; gap: 6px; font-size: 0.83rem; color: var(--muted); margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .marea-modal svg { width: 14px; height: 14px; fill: none; stroke: var(--gold); stroke-width: 2; }
+    .mdesc-modal { font-size: 0.9rem; font-weight: 300; color: rgba(237,240,247,0.72); line-height: 1.8; margin-bottom: 28px; flex: 1; }
+    .mwa-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: #25D366; color: #fff; border: none; border-radius: 8px;
+      padding: 14px 24px; font-size: 0.88rem; font-weight: 600;
+      text-decoration: none; cursor: pointer; transition: all 0.3s;
+      font-family: 'Inter', sans-serif; letter-spacing: 0.02em;
+    }
+    .mwa-btn:hover { background: #1ebe59; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,211,102,0.25); }
+    .mwa-btn svg { width: 20px; height: 20px; }
+
+    /* ── TASACION ── */
+    .tasa { padding: 100px clamp(18px,4vw,60px); background: linear-gradient(135deg,#0E1C2E,#0A1420); text-align: center; position: relative; overflow: hidden; }
+    .tasa::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 55% 55% at 50% 50%, rgba(201,168,76,0.065) 0%, transparent 70%); }
+    .tasa-inner { position: relative; max-width: 580px; margin: 0 auto; }
+    .tasa-inner h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 700; margin-bottom: 14px; line-height: 1.2; }
+    .tasa-inner h2 em { color: var(--gold); font-style: italic; }
+    .tasa-inner p { color: var(--muted); font-size: 0.95rem; font-weight: 300; line-height: 1.8; margin-bottom: 34px; }
+
+    /* ── SERVICES ── */
+    .svcs { padding: var(--pad) clamp(18px,4vw,60px); background: var(--navy); }
+    .svcs-inner { max-width: 1200px; margin: 0 auto; }
+    .svcs-inner > h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem,4vw,2.8rem); font-weight: 700; margin-bottom: 48px; max-width: 560px; line-height: 1.2; }
+    .svcs-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .svc { background: var(--navy-c); border: 1px solid var(--border); border-radius: 8px; padding: 36px 28px; position: relative; overflow: hidden; transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s; }
+    .svc::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.4s; }
+    .svc:hover { transform: translateY(-5px); border-color: rgba(201,168,76,0.18); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+    .svc:hover::after { transform: scaleX(1); }
+    .svc-n { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: rgba(201,168,76,0.18); margin-bottom: 14px; line-height: 1; }
+    .svc h3 { font-family: 'Playfair Display', serif; font-size: 1.12rem; font-weight: 600; margin-bottom: 10px; }
+    .svc p { font-size: 0.85rem; font-weight: 300; color: var(--muted); line-height: 1.75; }
+
+    /* ── ABOUT ── */
+    .about { padding: var(--pad) clamp(18px,4vw,60px); background: var(--navy-m); }
+    .about-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr; gap: 80px; align-items: center; }
+    .about-vis { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .maxi-ring { width: 200px; height: 200px; border-radius: 50%; overflow: hidden; border: 2.5px solid rgba(201,168,76,0.45); box-shadow: 0 0 0 8px rgba(201,168,76,0.07), 0 20px 50px rgba(0,0,0,0.4); }
+    .maxi-ring img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transform: scale(1.65); transform-origin: 50% 30%; }
+    .maxi-cred { background: var(--gold); color: var(--navy); padding: 10px 16px; border-radius: 6px; font-size: 0.73rem; font-weight: 700; text-align: center; line-height: 1.65; }
+    .about-txt .stag { margin-bottom: 12px; }
+    .about-txt h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem,3vw,2.4rem); font-weight: 700; line-height: 1.2; margin-bottom: 18px; }
+    .about-txt h2 em { color: var(--gold); font-style: italic; }
+    .about-txt p { font-size: 0.95rem; font-weight: 300; color: rgba(237,240,247,0.72); line-height: 1.85; margin-bottom: 12px; }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .pill { border: 1px solid rgba(201,168,76,0.28); color: var(--gold); padding: 5px 13px; border-radius: 100px; font-size: 0.76rem; }
+
+    /* ── CONTACT ── */
+    .cntct { padding: var(--pad) clamp(18px,4vw,60px); background: var(--navy); }
+    .cntct-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: start; }
+    .cntct-l .stag { margin-bottom: 12px; }
+    .cntct-l h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem,3vw,2.4rem); font-weight: 700; line-height: 1.2; margin-bottom: 14px; }
+    .cntct-l p { color: var(--muted); font-size: 0.93rem; font-weight: 300; line-height: 1.8; margin-bottom: 34px; }
+    .clist { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .ci { display: flex; align-items: center; gap: 14px; }
+    .ci-ico { width: 40px; height: 40px; background: rgba(201,168,76,0.09); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ci-ico svg { width: 18px; height: 18px; fill: none; stroke: var(--gold); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .ci-lbl { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+    .ci-val { font-size: 0.88rem; color: var(--off); font-weight: 300; }
+    .ci-val a { color: inherit; text-decoration: none; transition: color 0.2s; }
+    .ci-val a:hover { color: var(--gold); }
+    .cform { background: var(--navy-c); border: 1px solid var(--border); border-radius: 10px; padding: 38px 32px; }
+    .cform h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 26px; }
+    .fr { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .fg { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .fg label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .fg input, .fg select, .fg textarea { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 5px; padding: 12px 14px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 300; outline: none; width: 100%; transition: border-color 0.3s; }
+    .fg select option { background: var(--navy-c); }
+    .fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--gold); }
+    .fg textarea { resize: vertical; min-height: 90px; }
+    .bsub {
+      width: 100%; background: #25D366; color: #fff; border: none;
+      padding: 14px; border-radius: 8px; font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; transition: all 0.3s; margin-top: 4px; font-family: 'Inter', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .bsub:hover { background: #1ebe59; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,211,102,0.25); }
+    .bsub svg { width: 18px; height: 18px; }
+
+    /* ── FOOTER ── */
+    footer { background: #050D18; padding: 44px clamp(18px,4vw,60px) 24px; border-top: 1px solid var(--border); }
+    .foot-inner { max-width: 1200px; margin: 0 auto; }
+    .foot-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; padding-bottom: 22px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+    .foot-name { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; }
+    .foot-name span { color: var(--gold); }
+    .foot-mat { font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+    .foot-soc { display: flex; gap: 9px; }
+    .sc { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.1); border-radius: 7px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: all 0.3s; }
+    .sc:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+    .sc svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .foot-bot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .fcopy { font-size: 0.76rem; color: var(--muted); }
+    .ftag { font-size: 0.76rem; color: var(--muted); font-style: italic; }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .ra  { opacity: 0; transform: translateY(36px); transition: opacity .7s ease, transform .7s ease; }
+    .ral { opacity: 0; transform: translateX(-44px); transition: opacity .75s ease, transform .75s ease; }
+    .rar { opacity: 0; transform: translateX(44px); transition: opacity .75s ease, transform .75s ease; }
+    .ras { opacity: 0; transform: translateY(24px); transition: opacity .55s ease, transform .55s ease; }
+    .ra.in, .ral.in, .rar.in, .ras.in { opacity: 1; transform: translate(0); }
+
+    .bgold { display: inline-block; background: var(--gold); color: var(--navy); border: none; padding: 13px 34px; border-radius: 4px; font-size: 0.84rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+    .bgold:hover { background: var(--gold-l); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,168,76,0.25); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .pgrid { grid-template-columns: repeat(2,1fr); }
+      .svcs-grid { grid-template-columns: repeat(2,1fr); }
+      .about-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+      .about-vis { flex-direction: row; justify-content: center; }
+      .pills { justify-content: center; }
+      .cntct-inner { grid-template-columns: 1fr; gap: 44px; }
+      .fr { grid-template-columns: 1fr; }
+      .mbox { grid-template-columns: 1fr; }
+      .mimg-side { height: 260px; position: relative; }
+    }
+    @media (max-width: 600px) {
+      .pgrid { grid-template-columns: 1fr; }
+      .svcs-grid { grid-template-columns: 1fr; }
+      .cform { padding: 26px 20px; }
+      .mdetails { padding: 24px 20px; }
+    }
+    .nav-links.open { display: flex; flex-direction: column; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 190; background: rgba(10,20,32,0.97); align-items: center; justify-content: center; gap: 32px; }
+    .nav-links.open a { font-size: 1.2rem; color: #fff; }
+    .nav-xbtn { position: absolute; top: 22px; right: 28px; background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; line-height: 1; }
+
+    body.modal-open { overflow: hidden; }
+  </style>
 </head>
 <body>
 
-<!-- scroll progress -->
-<div id="scroll-progress"></div>
-
-<!-- custom cursor -->
-<div id="cursor-dot"></div>
-<div id="cursor-ring"></div>
-
-<!-- bg decoration lines -->
-<div class="bg-lines">
-  <div class="bg-lines-v"></div>
-  <div class="bg-lines-v"></div>
-  <div class="bg-lines-v"></div>
-  <div class="bg-lines-v"></div>
-</div>
-
-<!-- particles canvas -->
-<canvas id="particles-canvas"></canvas>
-
-<!-- ── NAV ── -->
-<nav id="main-nav">
-  <a href="#hero" class="nav-logo" aria-label="Barre Estudio">
-    <span class="nlc-barre">BARRE</span>
-    <span class="nlc-sep"><span class="nlc-sep-line"></span></span>
-    <span class="nlc-estudio">Estudio</span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#about">Nosotros</a></li>
-    <li><a href="#clases">Clases</a></li>
-    <li><a href="#horarios">Horarios</a></li>
-    <li><a href="#planes">Planes</a></li>
-    <li><a href="#contacto">Contacto</a></li>
-  </ul>
-  <a href="https://www.instagram.com/barre.estudio/" target="_blank" class="nav-cta"><span>Seguinos en IG</span></a>
+<!-- ── NAVBAR ── -->
+<nav class="nav">
+  <div class="nav-bar lg">
+    <a href="#inicio" class="nav-logo">
+      <!-- Casa con techo, eaves y ventana 4 paneles — igual al logo real -->
+      <svg viewBox="0 0 110 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:38px;height:auto;flex-shrink:0">
+        <!-- Roof / eaves -->
+        <polyline points="2,46 55,4 108,46" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Left wall -->
+        <line x1="16" y1="42" x2="16" y2="84" stroke="white" stroke-width="5" stroke-linecap="round"/>
+        <!-- Right wall -->
+        <line x1="94" y1="42" x2="94" y2="84" stroke="white" stroke-width="5" stroke-linecap="round"/>
+        <!-- 4-pane window in the roof peak -->
+        <rect x="40" y="19" width="30" height="25" rx="1.5" stroke="white" stroke-width="4" fill="none"/>
+        <line x1="55" y1="19" x2="55" y2="44" stroke="white" stroke-width="2.5"/>
+        <line x1="40" y1="31.5" x2="70" y2="31.5" stroke="white" stroke-width="2.5"/>
+      </svg>
+      <div>
+        <span class="nav-logo-name">OVELAR</span>
+        <span class="nav-logo-sub">Propiedades</span>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <button class="nav-xbtn" id="navX">×</button>
+      <li><a href="#propiedades">Propiedades</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <a href="#contacto" class="nav-btn">Consultar</a>
+    <button class="nav-toggle" id="navT"><span></span><span></span><span></span></button>
+  </div>
 </nav>
 
 <!-- ── HERO ── -->
-<section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-lines">
-    <div class="hero-line"></div>
-    <div class="hero-line"></div>
-    <div class="hero-line"></div>
-    <div class="hero-line"></div>
-  </div>
-  <div class="hero-orb hero-orb-1"></div>
-  <div class="hero-orb hero-orb-2"></div>
-  <div class="hero-orb hero-orb-3"></div>
-
+<section class="hero" id="inicio">
+  <video class="hero-video" autoplay loop muted playsinline>
+    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4">
+  </video>
+  <div class="hero-fade"></div>
   <div class="hero-content">
-    <div class="hl-eyebrow">
-      <span class="hl-eyebrow-line"></span>
-      <span class="hl-eyebrow-text">Ballet · Fitness · Pilates</span>
-      <span class="hl-eyebrow-line"></span>
-    </div>
-    <div class="hero-logo-built">
-      <div class="hlb-barre" aria-label="BARRE">
-        <span class="hlb-letter" style="--i:0">B</span><span class="hlb-letter" style="--i:1">A</span><span class="hlb-letter" style="--i:2">R</span><span class="hlb-letter" style="--i:3">R</span><span class="hlb-letter" style="--i:4">E</span>
+    <div class="hero-grid">
+      <div>
+        <h1 class="hero-heading" id="hHead" aria-label="Encontrá tu lugar en Buenos Aires."></h1>
+        <p class="hero-sub" id="hSub">Compra, venta y alquiler de propiedades en CABA con un profesional matriculado.</p>
+        <div class="hero-btns" id="hBtns">
+          <a href="#propiedades" class="hbtn-w">Ver propiedades</a>
+          <a href="#contacto" class="hbtn-g lg">Consultar ahora</a>
+        </div>
       </div>
-      <div class="hlb-bottom">
-        <div class="hlb-line"></div>
-        <span class="hlb-estudio">Estudio</span>
+      <div class="hero-right">
+        <div class="hero-tag lg" id="hTag">Compra. Venta. Alquiler.</div>
       </div>
     </div>
-    <p class="hero-subtitle">Tres disciplinas. Una clase. Una transformación.</p>
-    <div class="hero-cta-group">
-      <a href="#planes" class="btn-primary">Ver Planes</a>
-      <a href="#clases" class="btn-ghost">Conocer las Clases</a>
-    </div>
-  </div>
-
-  <div class="hero-scroll-hint">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
   </div>
 </section>
 
-<!-- ── MARQUEE ── -->
-<div class="marquee-strip">
-  <div class="marquee-track" id="marquee">
-    <span>Barre Estudio</span><span class="dot">◆</span>
-    <span>Ballet</span><span class="dot">◆</span>
-    <span>Fitness</span><span class="dot">◆</span>
-    <span>Pilates</span><span class="dot">◆</span>
-    <span>CABA</span><span class="dot">◆</span>
-    <span>Bienvenida a tu espacio</span><span class="dot">◆</span>
-    <span>Movimiento consciente</span><span class="dot">◆</span>
-    <span>Fuerza y elegancia</span><span class="dot">◆</span>
-    <span>Barre Estudio</span><span class="dot">◆</span>
-    <span>Ballet</span><span class="dot">◆</span>
-    <span>Fitness</span><span class="dot">◆</span>
-    <span>Pilates</span><span class="dot">◆</span>
-    <span>CABA</span><span class="dot">◆</span>
-    <span>Bienvenida a tu espacio</span><span class="dot">◆</span>
-    <span>Movimiento consciente</span><span class="dot">◆</span>
-    <span>Fuerza y elegancia</span><span class="dot">◆</span>
+<!-- ── PROPERTIES ── -->
+<section class="props" id="propiedades">
+  <div class="props-hdr ra">
+    <span class="stag">Propiedades disponibles</span>
+    <h2>Encontrá tu próxima propiedad</h2>
+    <div class="tabs">
+      <button class="tab on" data-f="all">Todas</button>
+      <button class="tab" data-f="venta">En Venta</button>
+      <button class="tab" data-f="alquiler">En Alquiler</button>
+    </div>
+  </div>
+  <div class="pgrid" id="pgrid">
+    <div class="pcard ras" data-id="1" data-t="venta">
+      <div class="pimg"><div class="pimg-inner c1"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge bv">Venta</span></div>
+      <div class="pbody"><div class="pprice">USD 185.000</div><div class="ptype">Departamento 3 ambientes</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Palermo Soho, CABA</div><div class="pfeats"><span class="pfeat">Balcón</span><span class="pfeat">2 baños</span><span class="pfeat">Luminoso</span></div></div>
+      <div class="pfoot"><span class="parea">82 m² totales</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+    <div class="pcard ras" data-id="2" data-t="venta">
+      <div class="pimg"><div class="pimg-inner c2"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge bv">Venta</span></div>
+      <div class="pbody"><div class="pprice">USD 260.000</div><div class="ptype">PH 4 ambientes</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Belgrano R, CABA</div><div class="pfeats"><span class="pfeat">Terraza propia</span><span class="pfeat">Cochera</span><span class="pfeat">3 baños</span></div></div>
+      <div class="pfoot"><span class="parea">115 m² totales</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+    <div class="pcard ras" data-id="3" data-t="venta">
+      <div class="pimg"><div class="pimg-inner c3"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge bv">Venta</span></div>
+      <div class="pbody"><div class="pprice">USD 148.000</div><div class="ptype">Departamento 2 ambientes</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Recoleta, CABA</div><div class="pfeats"><span class="pfeat">Piso madera</span><span class="pfeat">Piscina</span><span class="pfeat">Seguridad 24h</span></div></div>
+      <div class="pfoot"><span class="parea">58 m² totales</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+    <div class="pcard ras" data-id="4" data-t="venta">
+      <div class="pimg"><div class="pimg-inner c4"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge bv">Venta</span></div>
+      <div class="pbody"><div class="pprice">USD 350.000</div><div class="ptype">Casa 4 dormitorios</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Caballito, CABA</div><div class="pfeats"><span class="pfeat">Jardín</span><span class="pfeat">Garage doble</span><span class="pfeat">Quincho</span></div></div>
+      <div class="pfoot"><span class="parea">180 m² cubiertos</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+    <div class="pcard ras" data-id="5" data-t="alquiler">
+      <div class="pimg"><div class="pimg-inner c5"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge ba">Alquiler</span></div>
+      <div class="pbody"><div class="pprice">$1.850 / mes</div><div class="ptype">Departamento 2 ambientes</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Villa Crespo, CABA</div><div class="pfeats"><span class="pfeat">Primer piso</span><span class="pfeat">Cocina nueva</span><span class="pfeat">Soleado</span></div></div>
+      <div class="pfoot"><span class="parea">52 m² totales</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+    <div class="pcard ras" data-id="6" data-t="venta">
+      <div class="pimg"><div class="pimg-inner c6"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge bv">Venta</span></div>
+      <div class="pbody"><div class="pprice">USD 285.000</div><div class="ptype">Duplex 3 dormitorios</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>San Isidro, GBA Norte</div><div class="pfeats"><span class="pfeat">2 plantas</span><span class="pfeat">Piscina</span><span class="pfeat">Cochera</span></div></div>
+      <div class="pfoot"><span class="parea">130 m² totales</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+  </div>
+  <div class="props-more ra">
+    <p class="props-note">Propiedades de ejemplo — consultanos para ver el listado actualizado.</p>
+    <a href="#contacto" class="bgold">Ver todas las propiedades →</a>
+  </div>
+</section>
+
+<!-- ── PROPERTY MODAL ── -->
+<div class="mbg" id="mbg">
+  <div class="mbox" id="mbox">
+    <button class="mclose" id="mclose">×</button>
+    <div class="mimg-side" id="mimgSide">
+      <div class="mimg-bg-el" id="mimgBg"></div>
+      <div class="mimg-overlay">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <div class="mimg-note">📸 Fotos disponibles por WhatsApp</div>
+      </div>
+      <span class="mbadge-modal" id="mbadgeM"></span>
+    </div>
+    <div class="mdetails">
+      <div class="mprice-modal" id="mpriceM"></div>
+      <div class="mtitle-modal" id="mtitleM"></div>
+      <div class="mhood-modal">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span id="mhoodM"></span>
+      </div>
+      <div class="mfeats-modal" id="mfeatsM"></div>
+      <div class="marea-modal">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        <span id="mareaM"></span>
+      </div>
+      <p class="mdesc-modal" id="mdescM"></p>
+      <a class="mwa-btn" id="mwaBtn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.406A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.98 7.98 0 0 1-4.078-1.115l-.292-.174-3.027.854.854-3.027-.174-.292A7.97 7.97 0 0 1 4 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+        Consultar por WhatsApp
+      </a>
+    </div>
   </div>
 </div>
 
+<!-- ── TASACION ── -->
+<section class="tasa">
+  <div class="tasa-inner ra">
+    <span class="stag">¿Querés vender?</span>
+    <h2>Tasá tu propiedad<br><em>sin costo</em></h2>
+    <p>Obtenés una valuación profesional y precisa de tu inmueble para tomar la mejor decisión de venta o alquiler.</p>
+    <a href="#contacto" class="bgold">Solicitar tasación gratuita</a>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section class="svcs" id="servicios">
+  <div class="svcs-inner">
+    <span class="stag ra">Servicios</span>
+    <h2 class="ra">Un servicio integral<br>para cada operación</h2>
+    <div class="svcs-grid">
+      <div class="svc ras"><div class="svc-n">01</div><h3>Compra &amp; Venta</h3><p>Asesoramiento completo en todas las etapas de la operación, con respaldo legal y matriculado.</p></div>
+      <div class="svc ras"><div class="svc-n">02</div><h3>Tasaciones</h3><p>Valuación técnica y precisa de propiedades para decisiones de compra, venta y alquiler.</p></div>
+      <div class="svc ras"><div class="svc-n">03</div><h3>Alquileres &amp; Gestión</h3><p>Administración integral de alquileres, contratos y seguimiento de la propiedad.</p></div>
+      <div class="svc ras"><div class="svc-n">04</div><h3>Desarrollos</h3><p>Participación en proyectos inmobiliarios y comercialización de unidades en pozo.</p></div>
+      <div class="svc ras"><div class="svc-n">05</div><h3>Remodelaciones</h3><p>Gestión de obras para aumentar el valor de tu propiedad antes de vender o alquilar.</p></div>
+      <div class="svc ras"><div class="svc-n">06</div><h3>Obras &amp; Mantenimiento</h3><p>Contratista de obras y servicios para conservar tu inversión en óptimas condiciones.</p></div>
+    </div>
+  </div>
+</section>
+
 <!-- ── ABOUT ── -->
-<section id="about">
-  <div class="about-visual reveal-left">
-    <div class="about-frame">
-      <div class="about-frame-inner">
-        <div class="about-placeholder-icon">🩰</div>
-        <div class="about-placeholder-text">Poné tu foto<br>aquí (assets/about.jpg)</div>
+<section class="about" id="nosotros">
+  <div class="about-inner">
+    <div class="about-vis ral">
+      <div class="maxi-ring"><img src="assets/maxi.png" alt="Maximiliano Ovelar"></div>
+      <div class="maxi-cred">Matrícula CUCICBA<br>N°6598 · CABA</div>
+    </div>
+    <div class="about-txt rar">
+      <span class="stag">El profesional detrás</span>
+      <h2>Maximiliano Ovelar —<br><em>Martillero Judicial</em></h2>
+      <p>Maximiliano Ovelar es Martillero Judicial y Corredor Inmobiliario matriculado en CUCICBA, con experiencia en el mercado de Buenos Aires. Brinda un servicio integral que abarca compra, venta, alquiler, tasaciones y obras.</p>
+      <p>Cada operación cuenta con el respaldo de una matrícula habilitante que garantiza ética, transparencia y cumplimiento legal.</p>
+      <div class="pills">
+        <span class="pill">Martillero Judicial</span>
+        <span class="pill">Corredor Inmobiliario</span>
+        <span class="pill">Contratista de Obras</span>
+        <span class="pill">Buenos Aires · CABA</span>
       </div>
-    </div>
-    <div class="about-accent-1"></div>
-    <div class="about-accent-2"></div>
-    <div class="about-tag reveal">
-      <div class="about-tag-num counter" data-target="3398">0</div>
-      <div class="about-tag-label">Seguidores en Instagram</div>
-    </div>
-  </div>
-
-  <div class="about-text">
-    <p class="section-label reveal">Sobre nosotras</p>
-    <h2 class="section-title reveal">Donde el arte<br>se convierte en<br><em>fuerza</em></h2>
-    <p class="about-description reveal">
-      Barre Estudio nació con una idea simple y poderosa: que el ballet, el fitness y el pilates no son mundos separados. Son una sola experiencia que transforma el cuerpo y la mente. En cada clase combinamos la elegancia del ballet con la intensidad del fitness y la profundidad del pilates.
-    </p>
-    <div class="about-pillars">
-      <div class="pillar reveal" style="transition-delay:0.1s">
-        <span class="pillar-icon">🩰</span>
-        <div class="pillar-name">Ballet</div>
-        <div class="pillar-desc">Postura, gracia y control corporal</div>
-      </div>
-      <div class="pillar reveal" style="transition-delay:0.2s">
-        <span class="pillar-icon">🔥</span>
-        <div class="pillar-name">Fitness</div>
-        <div class="pillar-desc">Fuerza, tono y energía</div>
-      </div>
-      <div class="pillar reveal" style="transition-delay:0.3s">
-        <span class="pillar-icon">🧘</span>
-        <div class="pillar-name">Pilates</div>
-        <div class="pillar-desc">Core, flexibilidad y conciencia</div>
-      </div>
-    </div>
-    <div class="stats-row">
-      <div class="stat reveal" style="transition-delay:0.1s">
-        <div class="stat-number counter" data-target="3">0</div>
-        <div class="stat-label">Disciplinas en 1 clase</div>
-      </div>
-      <div class="stat reveal" style="transition-delay:0.2s">
-        <div class="stat-number">CABA</div>
-        <div class="stat-label">Buenos Aires</div>
-      </div>
-      <div class="stat reveal" style="transition-delay:0.3s">
-        <div class="stat-number">100%</div>
-        <div class="stat-label">Vos misma</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── CLASES ── -->
-<section id="clases">
-  <div class="clases-header">
-    <p class="section-label reveal" style="justify-content:center">Nuestras clases</p>
-    <h2 class="section-title reveal">Tres mundos,<br><em>una experiencia</em></h2>
-    <p class="reveal" style="transition-delay:0.2s">Cada clase en Barre Estudio integra las tres disciplinas de forma fluida, guiada por profesoras especializadas.</p>
-  </div>
-  <div class="clases-grid">
-
-    <div class="clase-card reveal" style="transition-delay:0.05s">
-      <span class="clase-num">01</span>
-      <div class="clase-icon">🩰</div>
-      <div class="clase-title">Ballet Barre</div>
-      <p class="clase-desc">Técnica de ballet adaptada para todos los niveles. Mejoramos postura, elongación y coordinación usando la barra como herramienta principal. Sin experiencia previa necesaria.</p>
-      <div class="clase-tags">
-        <span class="clase-tag">Postura</span>
-        <span class="clase-tag">Elongación</span>
-        <span class="clase-tag">Coordinación</span>
-        <span class="clase-tag">Todos los niveles</span>
-      </div>
-      <div class="clase-bar"></div>
-    </div>
-
-    <div class="clase-card reveal" style="transition-delay:0.15s">
-      <span class="clase-num">02</span>
-      <div class="clase-icon">🔥</div>
-      <div class="clase-title">Barre Fitness</div>
-      <p class="clase-desc">Alta intensidad con la elegancia del ballet. Combinamos ejercicios de fuerza, cardio y tonificación usando el peso del propio cuerpo. Resultados visibles desde la primera semana.</p>
-      <div class="clase-tags">
-        <span class="clase-tag">Tonificación</span>
-        <span class="clase-tag">Fuerza</span>
-        <span class="clase-tag">Cardio</span>
-        <span class="clase-tag">Alta intensidad</span>
-      </div>
-      <div class="clase-bar"></div>
-    </div>
-
-    <div class="clase-card reveal" style="transition-delay:0.25s">
-      <span class="clase-num">03</span>
-      <div class="clase-icon">🧘</div>
-      <div class="clase-title">Barre Pilates</div>
-      <p class="clase-desc">Fusión profunda de pilates con elementos de ballet. Trabajamos el core, la flexibilidad y la conciencia corporal en un ambiente relajado y enfocado. Ideal para equilibrar cuerpo y mente.</p>
-      <div class="clase-tags">
-        <span class="clase-tag">Core</span>
-        <span class="clase-tag">Flexibilidad</span>
-        <span class="clase-tag">Respiración</span>
-        <span class="clase-tag">Mente-cuerpo</span>
-      </div>
-      <div class="clase-bar"></div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ── MANIFESTO QUOTE ── -->
-<section id="manifesto">
-  <div class="manifesto-bg"></div>
-  <div class="quote-mark">"</div>
-  <div class="manifesto-lines-h"></div>
-  <div class="manifesto-text">
-    <blockquote class="manifesto-quote reveal">
-      "Combina ballet, fitness y pilates en una sola clase.<br>
-      Porque tu cuerpo merece <em>todo</em>."
-    </blockquote>
-    <p class="manifesto-author reveal" style="transition-delay:0.3s">— Barre Estudio, CABA</p>
-  </div>
-</section>
-
-<!-- ── HORARIOS ── -->
-<section id="horarios">
-  <div class="horarios-inner">
-    <div class="horarios-text">
-      <p class="section-label reveal">Horarios</p>
-      <h2 class="section-title reveal">Encontrá<br>tu <em>momento</em></h2>
-      <p class="reveal" style="transition-delay:0.2s">Clases disponibles de lunes a sábado en distintos horarios para que puedas organizarte fácil.</p>
-      <a href="#contacto" class="btn-ghost reveal" style="display:inline-block; margin-top:24px; transition-delay:0.3s">Consultar turno</a>
-    </div>
-    <div>
-      <table class="schedule-table reveal">
-        <thead>
-          <tr>
-            <th>Día</th>
-            <th>Horario</th>
-            <th>Clase</th>
-            <th>Nivel</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Lunes</td>
-            <td>[HORARIO A CONFIRMAR]</td>
-            <td><span class="class-badge badge-ballet">Ballet Barre</span></td>
-            <td>Todos</td>
-          </tr>
-          <tr>
-            <td>Martes</td>
-            <td>[HORARIO A CONFIRMAR]</td>
-            <td><span class="class-badge badge-fitness">Barre Fitness</span></td>
-            <td>Intermedio</td>
-          </tr>
-          <tr>
-            <td>Miércoles</td>
-            <td>[HORARIO A CONFIRMAR]</td>
-            <td><span class="class-badge badge-pilates">Barre Pilates</span></td>
-            <td>Todos</td>
-          </tr>
-          <tr>
-            <td>Jueves</td>
-            <td>[HORARIO A CONFIRMAR]</td>
-            <td><span class="class-badge badge-ballet">Ballet Barre</span></td>
-            <td>Avanzado</td>
-          </tr>
-          <tr>
-            <td>Viernes</td>
-            <td>[HORARIO A CONFIRMAR]</td>
-            <td><span class="class-badge badge-combo">Barre Completo</span></td>
-            <td>Todos</td>
-          </tr>
-          <tr>
-            <td>Sábado</td>
-            <td>[HORARIO A CONFIRMAR]</td>
-            <td><span class="class-badge badge-fitness">Barre Fitness</span></td>
-            <td>Principiante</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- ── PLANES ── -->
-<section id="planes">
-  <div class="planes-header">
-    <p class="section-label reveal" style="justify-content:center">Planes</p>
-    <h2 class="section-title reveal">Elegí tu <em>plan</em></h2>
-  </div>
-  <div class="planes-grid">
-
-    <div class="plan-card reveal" style="transition-delay:0.05s">
-      <div class="plan-name">Starter</div>
-      <div class="plan-price"><sup>$</sup>[PRECIO]<span>/mes</span></div>
-      <div class="plan-period">4 clases por mes</div>
-      <div class="plan-divider"></div>
-      <ul class="plan-features">
-        <li>4 clases a elección</li>
-        <li>Todos los estilos incluidos</li>
-        <li>App para reservar turnos</li>
-        <li>Comunidad privada</li>
-      </ul>
-      <a href="#contacto" class="plan-cta">Empezar</a>
-    </div>
-
-    <div class="plan-card featured reveal" style="transition-delay:0.15s">
-      <div class="plan-glow"></div>
-      <div class="plan-name">Full Barre</div>
-      <div class="plan-price"><sup>$</sup>[PRECIO]<span>/mes</span></div>
-      <div class="plan-period">Clases ilimitadas</div>
-      <div class="plan-divider"></div>
-      <ul class="plan-features">
-        <li>Clases ilimitadas</li>
-        <li>Ballet + Fitness + Pilates</li>
-        <li>Prioridad de turno</li>
-        <li>Descuento en talleres</li>
-        <li>1 clase de prueba gratis</li>
-      </ul>
-      <a href="#contacto" class="plan-cta">Empezar</a>
-    </div>
-
-    <div class="plan-card reveal" style="transition-delay:0.25s">
-      <div class="plan-name">Intensivo</div>
-      <div class="plan-price"><sup>$</sup>[PRECIO]<span>/mes</span></div>
-      <div class="plan-period">8 clases por mes</div>
-      <div class="plan-divider"></div>
-      <ul class="plan-features">
-        <li>8 clases a elección</li>
-        <li>Todos los estilos incluidos</li>
-        <li>App para reservar turnos</li>
-        <li>Comunidad privada</li>
-        <li>1 clase de regalo</li>
-      </ul>
-      <a href="#contacto" class="plan-cta">Empezar</a>
-    </div>
-
-  </div>
-</section>
-
-<!-- ── GALLERY ── -->
-<section id="galeria">
-  <div class="galeria-header">
-    <p class="section-label reveal">Galería</p>
-    <h2 class="section-title reveal">Nuestro <em>espacio</em></h2>
-  </div>
-  <div class="galeria-grid">
-    <div class="gallery-item reveal">
-      <div class="gallery-placeholder"><div class="gallery-icon">🩰</div><div class="gallery-hint">Foto principal</div></div>
-      <div class="gallery-overlay"><span>Ver</span></div>
-    </div>
-    <div class="gallery-item reveal" style="transition-delay:0.1s">
-      <div class="gallery-placeholder"><div class="gallery-icon">🏋️</div><div class="gallery-hint">Barre Fitness</div></div>
-      <div class="gallery-overlay"><span>Ver</span></div>
-    </div>
-    <div class="gallery-item reveal" style="transition-delay:0.15s">
-      <div class="gallery-placeholder"><div class="gallery-icon">🧘</div><div class="gallery-hint">Barre Pilates</div></div>
-      <div class="gallery-overlay"><span>Ver</span></div>
-    </div>
-    <div class="gallery-item reveal" style="transition-delay:0.2s">
-      <div class="gallery-placeholder"><div class="gallery-icon">✨</div><div class="gallery-hint">El espacio</div></div>
-      <div class="gallery-overlay"><span>Ver</span></div>
-    </div>
-    <div class="gallery-item reveal" style="transition-delay:0.25s">
-      <div class="gallery-placeholder"><div class="gallery-icon">💪</div><div class="gallery-hint">En acción</div></div>
-      <div class="gallery-overlay"><span>Ver</span></div>
     </div>
   </div>
 </section>
 
 <!-- ── CONTACT ── -->
-<section id="contacto">
-  <div class="contacto-inner">
-    <div class="contacto-info">
-      <p class="section-label reveal">Contacto</p>
-      <h2 class="section-title reveal">Hablemos<br>de tu <em>primera clase</em></h2>
-
-      <div class="contact-item reveal" style="transition-delay:0.1s">
-        <div class="contact-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-        </div>
-        <div>
-          <div class="contact-label">Sedes</div>
-          <div class="contact-value">
-            Puerto Madero · R. Vera Peñaloza 585<br>
-            Palermo · Cerviño 4490<br>
-            Belgrano · Roosevelt y Av. Cabildo
-          </div>
-        </div>
-      </div>
-
-      <div class="contact-item reveal" style="transition-delay:0.2s">
-        <div class="contact-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.52 14.13c-.23.65-1.35 1.24-1.85 1.32-.48.07-1.07.1-1.73-.11-.4-.13-.91-.3-1.56-.59-2.73-1.18-4.52-3.9-4.65-4.08-.14-.18-1.15-1.53-1.15-2.92s.73-2.07 1-2.35c.26-.28.56-.35.75-.35l.54.01c.17 0 .41-.06.65.5l.9 2.17c.06.13.1.28.01.45l-.33.47c-.11.13-.22.27-.09.53.49.97 1.26 1.83 2.3 2.43.26.15.51.13.69-.07l.55-.65c.16-.2.33-.15.55-.08l2.15 1.01c.21.1.34.15.4.24.04.38-.19 1.09-.42 1.67z"/></svg>
-        </div>
-        <div>
-          <div class="contact-label">WhatsApp / Teléfono</div>
-          <div class="contact-value"><a href="tel:[TELÉFONO]">[TU TELÉFONO AQUÍ]</a></div>
-        </div>
-      </div>
-
-      <div class="contact-item reveal" style="transition-delay:0.3s">
-        <div class="contact-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
-        </div>
-        <div>
-          <div class="contact-label">Email</div>
-          <div class="contact-value"><a href="mailto:[EMAIL]">[TU EMAIL AQUÍ]</a></div>
-        </div>
-      </div>
-
-      <div class="contact-item reveal" style="transition-delay:0.4s">
-        <div class="contact-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-        </div>
-        <div>
-          <div class="contact-label">Instagram</div>
-          <div class="contact-value">
-            <a href="https://www.instagram.com/barre.estudio/" target="_blank">@barre.estudio</a>
-            — 3.398 seguidores
-          </div>
-        </div>
-      </div>
+<section class="cntct" id="contacto">
+  <div class="cntct-inner">
+    <div class="cntct-l ral">
+      <span class="stag">Contacto</span>
+      <h2>Hablemos de tu próxima operación</h2>
+      <p>Disponible para asesorarte en cualquier etapa. Completá el formulario y te armamos un mensaje directo para WhatsApp.</p>
+      <ul class="clist">
+        <li class="ci">
+          <div class="ci-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.62 4.38 2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div><div class="ci-lbl">WhatsApp / Teléfono</div><div class="ci-val"><a href="https://wa.me/5491132116794" target="_blank">11-3211-6794</a></div></div>
+        </li>
+        <li class="ci">
+          <div class="ci-ico"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div><div class="ci-lbl">Email</div><div class="ci-val"><a href="mailto:maximilianovelar5@gmail.com">maximilianovelar5@gmail.com</a></div></div>
+        </li>
+        <li class="ci">
+          <div class="ci-ico"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+          <div><div class="ci-lbl">Instagram</div><div class="ci-val"><a href="https://instagram.com/maximiliano_ovelar" target="_blank">@maximiliano_ovelar</a></div></div>
+        </li>
+        <li class="ci">
+          <div class="ci-ico"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><div class="ci-lbl">Ubicación</div><div class="ci-val">[DIRECCIÓN AQUÍ] · Buenos Aires, CABA</div></div>
+        </li>
+      </ul>
     </div>
-
-    <div class="contact-form reveal" style="transition-delay:0.2s">
-      <form>
-        <div class="form-group">
-          <label>Nombre completo</label>
-          <input type="text" placeholder="Tu nombre">
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" placeholder="tu@email.com">
-        </div>
-        <div class="form-group">
-          <label>Sede</label>
-          <select>
-            <option value="">Seleccioná una sede</option>
-            <option>Puerto Madero · R. Vera Peñaloza 585</option>
-            <option>Palermo · Cerviño 4490</option>
-            <option>Belgrano · Roosevelt y Av. Cabildo</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>¿Qué te interesa?</label>
-          <select>
-            <option value="">Seleccioná una opción</option>
-            <option>Ballet Barre</option>
-            <option>Barre Fitness</option>
-            <option>Barre Pilates</option>
-            <option>Quiero conocer todos los planes</option>
-            <option>Clase de prueba gratis</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Mensaje</label>
-          <textarea placeholder="¿Tenés alguna pregunta o querés reservar tu primera clase?"></textarea>
-        </div>
-        <button type="submit" class="form-submit"><span>Enviar mensaje</span></button>
-      </form>
+    <div class="cform rar">
+      <h3>Envianos tu consulta</h3>
+      <div class="fr">
+        <div class="fg"><label>Nombre *</label><input type="text" id="fName" placeholder="Tu nombre"></div>
+        <div class="fg"><label>Teléfono</label><input type="tel" id="fPhone" placeholder="Tu teléfono"></div>
+      </div>
+      <div class="fg"><label>Email</label><input type="email" id="fEmail" placeholder="tu@email.com"></div>
+      <div class="fg">
+        <label>¿En qué te podemos ayudar?</label>
+        <select id="fService">
+          <option value="" disabled selected>Seleccioná</option>
+          <option>Compra de propiedad</option>
+          <option>Venta de propiedad</option>
+          <option>Tasación gratuita</option>
+          <option>Alquiler</option>
+          <option>Desarrollo inmobiliario</option>
+          <option>Remodelación / Obra</option>
+          <option>Otra consulta</option>
+        </select>
+      </div>
+      <div class="fg"><label>Mensaje</label><textarea id="fMsg" placeholder="Contanos tu consulta..."></textarea></div>
+      <button class="bsub" id="bsub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.406A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.98 7.98 0 0 1-4.078-1.115l-.292-.174-3.027.854.854-3.027-.174-.292A7.97 7.97 0 0 1 4 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+        Enviar por WhatsApp
+      </button>
     </div>
   </div>
 </section>
 
-<!-- ── MAPAS ── -->
-<div id="mapas">
-  <div class="mapas-title">Nuestras sedes</div>
-  <div class="mapas-grid mapas-grid-3">
-    <div class="mapa-card reveal">
-      <div class="mapa-card-header">
-        <div class="mapa-pin"></div>
-        <div>
-          <div class="mapa-sede">Puerto Madero</div>
-          <div class="mapa-address">R. Vera Peñaloza 585 · Esmeralda Wellness</div>
-        </div>
-      </div>
-      <div class="mapa-frame">
-        <iframe
-          src="https://maps.google.com/maps?q=Rosario+Vera+Pe%C3%B1aloza+585+Puerto+Madero+Buenos+Aires&t=&z=15&ie=UTF8&iwloc=&output=embed"
-          allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
-      </div>
-    </div>
-    <div class="mapa-card reveal" style="transition-delay:0.12s">
-      <div class="mapa-card-header">
-        <div class="mapa-pin"></div>
-        <div>
-          <div class="mapa-sede">Palermo</div>
-          <div class="mapa-address">Cerviño 4490 · Kaibiliss Studio</div>
-        </div>
-      </div>
-      <div class="mapa-frame">
-        <iframe
-          src="https://maps.google.com/maps?q=Cervi%C3%B1o+4490+Palermo+Buenos+Aires&t=&z=15&ie=UTF8&iwloc=&output=embed"
-          allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
-      </div>
-    </div>
-    <div class="mapa-card reveal" style="transition-delay:0.24s">
-      <div class="mapa-card-header">
-        <div class="mapa-pin"></div>
-        <div>
-          <div class="mapa-sede">Belgrano</div>
-          <div class="mapa-address">Roosevelt y Av. Cabildo</div>
-        </div>
-      </div>
-      <div class="mapa-frame">
-        <iframe
-          src="https://maps.google.com/maps?q=Roosevelt+y+Av+Cabildo+Belgrano+Buenos+Aires&t=&z=15&ie=UTF8&iwloc=&output=embed"
-          allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- ── FOOTER ── -->
 <footer>
-  <div>
-    <div class="footer-logo-css">
-      <span class="flc-barre">BARRE</span>
-      <span class="flc-sep-line"></span>
-      <span class="flc-estudio">Estudio</span>
+  <div class="foot-inner">
+    <div class="foot-top">
+      <div>
+        <div class="foot-name">OVELAR <span>PROPIEDADES</span></div>
+        <div class="foot-mat">Martillero Judicial · Corredor Inmobiliario · Matrícula CUCICBA N°6598 CABA</div>
+      </div>
+      <div class="foot-soc">
+        <a href="https://instagram.com/maximiliano_ovelar" target="_blank" class="sc" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="https://wa.me/5491132116794" target="_blank" class="sc" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+        <a href="mailto:maximilianovelar5@gmail.com" class="sc" aria-label="Email"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
+      </div>
     </div>
-    <div class="footer-tagline">Ballet · Fitness · Pilates · CABA</div>
-  </div>
-  <div class="footer-links">
-    <a href="#about">Nosotros</a>
-    <a href="#clases">Clases</a>
-    <a href="#planes">Planes</a>
-    <a href="#contacto">Contacto</a>
-  </div>
-  <a href="https://www.instagram.com/barre.estudio/" target="_blank" class="footer-ig">
-    <div class="footer-ig-icon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+    <div class="foot-bot">
+      <div class="fcopy">© 2026 Ovelar Propiedades. Todos los derechos reservados.</div>
+      <div class="ftag">Trabaja siempre con profesionales matriculados.</div>
     </div>
-    @barre.estudio
-  </a>
-  <div class="footer-copy">© 2026 Barre Estudio. Todos los derechos reservados.</div>
+  </div>
 </footer>
 
 <script>
-/* ── CUSTOM CURSOR ── */
-const dot = document.getElementById('cursor-dot');
-const ring = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-(function animCursor(){
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
-  dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-  requestAnimationFrame(animCursor);
+// ── PROPERTY DATA
+const PROPS = {
+  1: { type:'venta', badge:'Venta', price:'USD 185.000', title:'Departamento 3 ambientes', hood:'Palermo Soho, CABA', area:'82 m² totales', feats:['Balcón','2 baños','Luminoso','Contrafrente'], color:'c1', desc:'Amplio departamento de 3 ambientes a metros de Juan B. Justo. Living-comedor con balcón panorámico, dormitorio principal con baño en suite, segundo dormitorio y baño de visitas. Pisos de madera, cocina equipada y excelente iluminación natural. Expensas bajas. Escritura inmediata.' },
+  2: { type:'venta', badge:'Venta', price:'USD 260.000', title:'PH 4 ambientes', hood:'Belgrano R, CABA', area:'115 m² totales', feats:['Terraza propia 45m²','Cochera fija','3 baños','Seguridad 24h'], color:'c2', desc:'Exclusivo PH en el corazón de Belgrano R. Dos plantas independientes con 4 ambientes amplios, terraza propia de 45 m², cochera fija y 3 baños completos. Terminaciones de primera calidad, seguridad permanente y espectacular vista a la ciudad. Edificio boutique de categoría.' },
+  3: { type:'venta', badge:'Venta', price:'USD 148.000', title:'Departamento 2 ambientes', hood:'Recoleta, CABA', area:'58 m² totales', feats:['Piso madera','Piscina','Seguridad 24h','SUM'], color:'c3', desc:'Elegante departamento en el barrio más cotizado de Buenos Aires. Pisos de madera fina, aberturas de aluminio, 1 dormitorio amplio con vestidor y baño completo con bañera. Acceso a piscina, gimnasio y SUM. Portería las 24 horas. Excelente estado de conservación.' },
+  4: { type:'venta', badge:'Venta', price:'USD 350.000', title:'Casa 4 dormitorios', hood:'Caballito, CABA', area:'180 m² cubiertos', feats:['Jardín 80m²','Garage doble','Quincho con parrilla','4 baños'], color:'c4', desc:'Casa de categoría con jardín y quincho en Caballito. Planta baja: living amplio, comedor, cocina equipada y baño de visitas. Primer piso: 4 dormitorios y 2 baños. Garage doble, jardín trasero de 80 m² con quincho y parrilla. Ideal para familia grande. Barrio tranquilo y arbolado.' },
+  5: { type:'alquiler', badge:'Alquiler', price:'$1.850 / mes', title:'Departamento 2 ambientes', hood:'Villa Crespo, CABA', area:'52 m² totales', feats:['Primer piso','Cocina nueva','Bien iluminado','Subte B a 2 cuadras'], color:'c5', desc:'Moderno departamento de 2 ambientes en planta 1° sin paso. Cocina nueva integrada al living, baño renovado, excelente iluminación natural. Edificio con ascensor y encargado. A dos cuadras del subte B, rodeado de comercios y gastronomía. Contrato 2 años. Recibe crédito.' },
+  6: { type:'venta', badge:'Venta', price:'USD 285.000', title:'Duplex 3 dormitorios', hood:'San Isidro, GBA Norte', area:'130 m² totales', feats:['2 plantas','Piscina privada','Cochera','Jardín'], color:'c6', desc:'Espectacular duplex en zona residencial premium de San Isidro. Planta baja: living amplio, cocina americana y baño social. Planta alta: 3 dormitorios en suite y baño principal. Jardín privado con piscina, cochera descubierta y parrilla. Ideal como primera vivienda o inversión. Escritura inmediata.' }
+};
+
+// ── MOBILE NAV
+const navT=document.getElementById('navT'),navL=document.getElementById('navLinks'),navX=document.getElementById('navX');
+navT.addEventListener('click',()=>navL.classList.add('open'));
+navX.addEventListener('click',()=>navL.classList.remove('open'));
+navL.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navL.classList.remove('open')));
+
+// ── HERO CHAR ANIMATION
+(function(){
+  const lines=['Encontrá tu lugar','en Buenos Aires.'];
+  const el=document.getElementById('hHead');
+  const charDelay=30,initDelay=200;
+  lines.forEach((line,li)=>{
+    const div=document.createElement('div');
+    div.style.display='block';
+    [...line].forEach((ch,ci)=>{
+      const sp=document.createElement('span');
+      sp.className='hc';
+      sp.textContent=ch===' '?' ':ch;
+      const d=initDelay+(li*lines[0].length*charDelay)+(ci*charDelay);
+      setTimeout(()=>{sp.style.opacity='1';sp.style.transform='translateX(0)';},d);
+      div.appendChild(sp);
+    });
+    el.appendChild(div);
+  });
+  setTimeout(()=>{document.getElementById('hSub').style.opacity='1';},800);
+  setTimeout(()=>{document.getElementById('hBtns').style.opacity='1';},1200);
+  setTimeout(()=>{document.getElementById('hTag').style.opacity='1';},1400);
 })();
-document.querySelectorAll('a, button, .clase-card, .plan-card, .gallery-item, .pillar').forEach(el => {
-  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+
+// ── SCROLL REVEALS
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});},{threshold:0.1});
+document.querySelectorAll('.ra,.ral,.rar').forEach(el=>io.observe(el));
+['#pgrid','.svcs-grid'].forEach(sel=>{
+  const g=document.querySelector(sel);if(!g)return;
+  const kids=g.querySelectorAll('.ras,.svc');
+  const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){kids.forEach((k,i)=>setTimeout(()=>k.classList.add('in'),i*90));obs.unobserve(x.target);}});},{threshold:0.05});
+  obs.observe(g);
 });
-const isMobileScreen = window.innerWidth <= 768;
 
-/* ── SCROLL PROGRESS ── */
-const progressBar = document.getElementById('scroll-progress');
-window.addEventListener('scroll', () => {
-  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
-  progressBar.style.width = pct + '%';
-}, { passive: true });
-
-/* ── NAV ON SCROLL ── */
-const nav = document.getElementById('main-nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 60);
-}, { passive: true });
-
-
-/* ── PARTICLES (solo desktop) ── */
-const canvas = document.getElementById('particles-canvas');
-if (!isMobileScreen) {
-const ctx = canvas.getContext('2d');
-let W, H, particles = [];
-function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
-
-const colors = ['rgba(184,144,74,', 'rgba(190,107,130,', 'rgba(13,13,11,'];
-for(let i=0; i<70; i++){
-  particles.push({
-    x: Math.random()*window.innerWidth,
-    y: Math.random()*window.innerHeight,
-    r: Math.random()*1.5 + 0.3,
-    vx: (Math.random()-0.5)*0.3,
-    vy: (Math.random()-0.5)*0.3,
-    c: colors[Math.floor(Math.random()*colors.length)],
-    a: Math.random()*0.5+0.1
+// ── FILTER TABS
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    const f=btn.dataset.f;
+    document.querySelectorAll('.pcard').forEach(c=>{c.style.display=(f==='all'||c.dataset.t===f)?'block':'none';});
   });
+});
+
+// ── PROPERTY MODAL
+const mbg=document.getElementById('mbg');
+const modalClose=document.getElementById('mclose');
+
+function openModal(id){
+  const p=PROPS[id];if(!p)return;
+  document.getElementById('mimgBg').className='mimg-bg-el '+p.color;
+  const badge=document.getElementById('mbadgeM');
+  badge.textContent=p.badge;
+  badge.className='mbadge-modal '+(p.type==='venta'?'bv':'ba');
+  document.getElementById('mpriceM').textContent=p.price;
+  document.getElementById('mtitleM').textContent=p.title;
+  document.getElementById('mhoodM').textContent=p.hood;
+  document.getElementById('mareaM').textContent=p.area;
+  document.getElementById('mdescM').textContent=p.desc;
+  const featsEl=document.getElementById('mfeatsM');
+  featsEl.innerHTML=p.feats.map(f=>`<span class="mfeat">${f}</span>`).join('');
+  const msg=`Hola Maximiliano! Vi la siguiente propiedad en tu web y me interesa:\n\n🏠 ${p.title} — ${p.hood}\n💰 ${p.price}\n📐 ${p.area}\n✨ ${p.feats.join(' · ')}\n\n¿Podés darme más información? ¡Gracias!`;
+  document.getElementById('mwaBtn').href='https://wa.me/5491132116794?text='+encodeURIComponent(msg);
+  mbg.classList.add('open');
+  document.body.classList.add('modal-open');
 }
-function drawParticles(){
-  ctx.clearRect(0,0,W,H);
-  particles.forEach(p => {
-    p.x += p.vx; p.y += p.vy;
-    if(p.x<0) p.x=W; if(p.x>W) p.x=0;
-    if(p.y<0) p.y=H; if(p.y>H) p.y=0;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-    ctx.fillStyle = p.c + p.a + ')';
-    ctx.fill();
-  });
-  requestAnimationFrame(drawParticles);
+
+function closeModal(){
+  mbg.classList.remove('open');
+  document.body.classList.remove('modal-open');
 }
-drawParticles();
-} // end particles desktop-only
 
-/* ── INTERSECTION OBSERVER (reveal + counter) ── */
-const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
-  });
-}, { threshold: 0.12, rootMargin:'0px 0px -40px 0px' });
-revealEls.forEach(el => observer.observe(el));
+document.querySelectorAll('.pcard').forEach(card=>{
+  card.addEventListener('click',()=>openModal(parseInt(card.dataset.id)));
+});
+modalClose.addEventListener('click',closeModal);
+mbg.addEventListener('click',e=>{if(e.target===mbg)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
-/* ── COUNTERS ── */
-function animCounter(el){
-  const target = parseInt(el.dataset.target);
-  const duration = 1600;
-  const start = performance.now();
-  function step(now){
-    const p = Math.min((now-start)/duration, 1);
-    const ease = 1 - Math.pow(1-p, 3);
-    el.textContent = Math.floor(ease * target).toLocaleString('es-AR');
-    if(p < 1) requestAnimationFrame(step);
+// ── WHATSAPP FORM
+document.getElementById('bsub').addEventListener('click',()=>{
+  const name=(document.getElementById('fName').value||'').trim();
+  const phone=(document.getElementById('fPhone').value||'').trim();
+  const service=document.getElementById('fService').value||'';
+  const msg=(document.getElementById('fMsg').value||'').trim();
+
+  if(!name){
+    document.getElementById('fName').focus();
+    document.getElementById('fName').style.borderColor='#ff6b6b';
+    setTimeout(()=>document.getElementById('fName').style.borderColor='',2000);
+    return;
   }
-  requestAnimationFrame(step);
-}
-const counterObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if(e.isIntersecting){ animCounter(e.target); counterObs.unobserve(e.target); }
-  });
-}, { threshold: 0.5 });
-document.querySelectorAll('.counter').forEach(el => counterObs.observe(el));
 
-/* ── PARALLAX on scroll ── */
-function handleParallax(){
-  const sy = window.scrollY;
-  const orb1 = document.querySelector('.hero-orb-1');
-  const orb2 = document.querySelector('.hero-orb-2');
-  if(orb1) orb1.style.transform = `translateY(${sy*0.15}px)`;
-  if(orb2) orb2.style.transform = `translateY(${-sy*0.08}px)`;
-  const quote = document.querySelector('.quote-mark');
-  if(quote){
-    const rect = document.getElementById('manifesto').getBoundingClientRect();
-    if(rect.top < window.innerHeight && rect.bottom > 0){
-      const p = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
-      quote.style.transform = `translateY(${(p-0.5)*60}px)`;
-    }
-  }
-}
-window.addEventListener('scroll', handleParallax, { passive: true });
+  let text=`Hola Maximiliano! 👋 Soy *${name}*.`;
+  if(service) text+=`\nMe interesa consultar sobre: *${service}*`;
+  if(msg) text+=`\n\n${msg}`;
+  if(phone) text+=`\n\n📱 Mi teléfono: ${phone}`;
+  text+=`\n\n¡Gracias!`;
 
-/* ── 3D TILT on clase cards ── */
-document.querySelectorAll('.clase-card, .plan-card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const r = card.getBoundingClientRect();
-    const x = e.clientX - r.left - r.width/2;
-    const y = e.clientY - r.top - r.height/2;
-    card.style.transform = `perspective(600px) rotateY(${x/r.width*8}deg) rotateX(${-y/r.height*6}deg) translateZ(4px)`;
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = 'perspective(600px) rotateY(0) rotateX(0) translateZ(0)';
-  });
-});
-
-/* ── MAGNETIC BUTTONS ── */
-document.querySelectorAll('.btn-primary, .btn-ghost, .nav-cta').forEach(btn => {
-  btn.addEventListener('mousemove', e => {
-    const r = btn.getBoundingClientRect();
-    const x = e.clientX - r.left - r.width/2;
-    const y = e.clientY - r.top - r.height/2;
-    btn.style.transform = `translate(${x*0.25}px, ${y*0.25}px)`;
-  });
-  btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
-});
-
-/* ── STAGGER delays for reveals ── */
-document.querySelectorAll('.clases-grid .clase-card, .planes-grid .plan-card').forEach((el, i) => {
-  if(!el.style.transitionDelay) el.style.transitionDelay = (i * 0.08) + 's';
+  window.open('https://wa.me/5491132116794?text='+encodeURIComponent(text),'_blank');
 });
 </script>
 </body>
