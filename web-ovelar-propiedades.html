@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ovelar Propiedades | Compra y Venta en Buenos Aires</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: #0A1420; color: #fff; overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0A1420; }
+    ::-webkit-scrollbar-thumb { background: #C9A84C; border-radius: 3px; }
+    ::selection { background: #C9A84C; color: #0A1420; }
+
+    :root {
+      --gold: #C9A84C; --gold-l: #E2C675;
+      --navy: #0A1420; --navy-m: #0E1C2E; --navy-c: #162438;
+      --muted: #6B7F9A; --off: #EDF0F7;
+      --border: rgba(255,255,255,0.07); --pad: clamp(80px,10vw,130px);
+    }
+
+    /* ── LIQUID GLASS ── */
+    .lg {
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+      position: relative; overflow: hidden;
+    }
+    .lg::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.4px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.08) 25%,
+        rgba(255,255,255,0) 50%, rgba(255,255,255,0.08) 75%, rgba(255,255,255,0.28) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+    }
+
+    /* ── NAVBAR ── */
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 18px clamp(18px,4vw,60px); }
+    .nav-bar { border-radius: 14px; padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .nav-logo svg { width: 30px; height: 30px; flex-shrink: 0; }
+    .nav-logo-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: #fff; letter-spacing: 0.04em; line-height: 1; }
+    .nav-logo-sub { font-size: 0.6rem; font-weight: 400; color: rgba(201,168,76,0.8); letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-top: 1px; }
+    .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+    .nav-links a { font-size: 0.84rem; font-weight: 400; color: rgba(255,255,255,0.72); text-decoration: none; transition: color 0.25s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-btn { background: #fff; color: #000; border: none; border-radius: 8px; padding: 9px 22px; font-size: 0.84rem; font-weight: 500; cursor: pointer; text-decoration: none; font-family: 'Inter', sans-serif; transition: background 0.2s; white-space: nowrap; }
+    .nav-btn:hover { background: #e5e7eb; }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-toggle span { display: block; width: 22px; height: 1.5px; background: #fff; }
+
+    /* ── HERO ── */
+    .hero { position: relative; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+    .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .hero-fade { position: absolute; bottom: 0; left: 0; right: 0; height: 60%; background: linear-gradient(to top, rgba(10,20,32,0.65) 0%, transparent 100%); z-index: 1; pointer-events: none; }
+    .hero-content { position: relative; z-index: 2; padding: 0 clamp(18px,4vw,60px) clamp(42px,6vw,62px); flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 32px; }
+    .hero-heading { font-size: clamp(2.6rem,6vw,5.5rem); font-weight: 400; line-height: 1.05; letter-spacing: -0.04em; color: #fff; margin-bottom: 18px; }
+    .hc { display: inline-block; opacity: 0; transform: translateX(-18px); transition: opacity 500ms, transform 500ms; }
+    .hero-sub { font-size: clamp(0.9rem,1.4vw,1.05rem); font-weight: 300; color: #d1d5db; margin-bottom: 26px; max-width: 460px; line-height: 1.65; opacity: 0; transition: opacity 1000ms; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; opacity: 0; transition: opacity 1000ms; }
+    .hbtn-w { background: #fff; color: #000; border: none; border-radius: 8px; padding: 13px 30px; font-size: 0.88rem; font-weight: 500; cursor: pointer; text-decoration: none; font-family: 'Inter', sans-serif; transition: background 0.2s; }
+    .hbtn-w:hover { background: #e5e7eb; }
+    .hbtn-g { border-radius: 8px; padding: 13px 30px; border: 1px solid rgba(255,255,255,0.2); font-size: 0.88rem; font-weight: 500; color: #fff; cursor: pointer; text-decoration: none; font-family: 'Inter', sans-serif; transition: all 0.3s; }
+    .hbtn-g:hover { background: #fff !important; color: #000 !important; }
+    .hero-right { display: flex; align-items: flex-end; justify-content: flex-end; }
+    .hero-tag { border: 1px solid rgba(255,255,255,0.2); border-radius: 14px; padding: 14px 26px; font-size: clamp(1rem,2vw,1.4rem); font-weight: 300; color: #fff; opacity: 0; transition: opacity 1000ms; }
+
+    /* ── PROPERTIES ── */
+    .props { padding: var(--pad) clamp(18px,4vw,60px); background: var(--navy-m); }
+    .props-hdr { max-width: 1200px; margin: 0 auto 40px; }
+    .stag { color: var(--gold); font-size: 0.73rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; display: block; }
+    .props-hdr h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem,4vw,2.8rem); font-weight: 700; margin-bottom: 22px; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tab { background: transparent; border: 1px solid rgba(255,255,255,0.14); color: var(--muted); padding: 7px 18px; border-radius: 100px; font-size: 0.8rem; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.3s; }
+    .tab.on { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+    .tab:hover:not(.on) { border-color: rgba(255,255,255,0.35); color: #fff; }
+
+    .pgrid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .pcard { background: var(--navy-c); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform 0.4s, box-shadow 0.4s; cursor: pointer; }
+    .pcard:hover { transform: translateY(-7px); box-shadow: 0 28px 64px rgba(0,0,0,0.45); }
+    .pimg { height: 195px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .pimg-inner { position: absolute; inset: 0; transition: transform 0.6s ease; }
+    .pcard:hover .pimg-inner { transform: scale(1.06); }
+    .pimg > svg { position: relative; z-index: 1; width: 44px; height: 44px; opacity: 0.15; fill: none; stroke: #fff; stroke-width: 1; }
+    .pbadge { position: absolute; top: 14px; left: 14px; z-index: 2; padding: 4px 12px; border-radius: 100px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+    .bv { background: var(--gold); color: var(--navy); }
+    .ba { background: rgba(0,0,0,0.45); backdrop-filter: blur(6px); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .pbody { padding: 20px; }
+    .pprice { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: var(--gold); margin-bottom: 5px; }
+    .ptype { font-size: 0.88rem; font-weight: 500; margin-bottom: 4px; }
+    .phood-txt { font-size: 0.8rem; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 4px; }
+    .pfeats { display: flex; gap: 5px; flex-wrap: wrap; }
+    .pfeat { background: rgba(255,255,255,0.05); padding: 3px 9px; border-radius: 4px; font-size: 0.73rem; color: var(--muted); }
+    .pfoot { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .parea { font-size: 0.78rem; color: var(--muted); }
+    .pcta-btn { font-size: 0.77rem; font-weight: 500; color: var(--gold); background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: color 0.2s; padding: 0; }
+    .pcta-btn:hover { color: var(--gold-l); }
+
+    .c1{background:linear-gradient(140deg,#0f2540,#1a3a55);}
+    .c2{background:linear-gradient(140deg,#1a0d2e,#2e1850);}
+    .c3{background:linear-gradient(140deg,#0d1f18,#163325);}
+    .c4{background:linear-gradient(140deg,#261508,#3d2210);}
+    .c5{background:linear-gradient(140deg,#0f1a2e,#1a2d50);}
+    .c6{background:linear-gradient(140deg,#1a0d0d,#3d1a1a);}
+
+    .props-more { max-width: 1200px; margin: 36px auto 0; text-align: center; }
+    .props-note { font-size: 0.82rem; color: var(--muted); margin-bottom: 18px; }
+
+    /* ── PROPERTY MODAL ── */
+    .mbg {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(5,12,22,0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .mbg.open { opacity: 1; pointer-events: all; }
+    .mbox {
+      background: #101E30; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; overflow: hidden;
+      max-width: 880px; width: 100%; max-height: 92vh;
+      display: grid; grid-template-columns: 1.1fr 0.9fr;
+      transform: scale(0.95) translateY(16px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      overflow-y: auto;
+    }
+    .mbg.open .mbox { transform: scale(1) translateY(0); }
+    .mimg-side { position: sticky; top: 0; height: 480px; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; }
+    .mimg-bg-el { position: absolute; inset: 0; transition: transform 0.6s ease; }
+    .mimg-side:hover .mimg-bg-el { transform: scale(1.04); }
+    .mimg-overlay { position: relative; z-index: 2; text-align: center; }
+    .mimg-overlay svg { width: 56px; height: 56px; fill: none; stroke: rgba(255,255,255,0.25); stroke-width: 1; margin-bottom: 10px; }
+    .mimg-note { font-size: 0.78rem; color: rgba(255,255,255,0.35); letter-spacing: 0.05em; }
+    .mbadge-modal { position: absolute; top: 16px; left: 16px; z-index: 3; padding: 5px 14px; border-radius: 100px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+    .mclose {
+      position: absolute; top: 16px; right: 16px; z-index: 10;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+      color: #fff; font-size: 1.2rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; backdrop-filter: blur(4px);
+    }
+    .mclose:hover { background: rgba(255,255,255,0.2); }
+    .mdetails { padding: 36px 32px; display: flex; flex-direction: column; gap: 0; overflow-y: auto; }
+    .mprice-modal { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+    .mtitle-modal { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; }
+    .mhood-modal { font-size: 0.85rem; color: var(--muted); display: flex; align-items: center; gap: 5px; margin-bottom: 20px; }
+    .mhood-modal svg { width: 14px; height: 14px; fill: none; stroke: var(--gold); stroke-width: 2; flex-shrink: 0; }
+    .mfeats-modal { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+    .mfeat { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.09); padding: 5px 12px; border-radius: 5px; font-size: 0.78rem; color: var(--off); }
+    .marea-modal { display: flex; align-items: center; gap: 6px; font-size: 0.83rem; color: var(--muted); margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .marea-modal svg { width: 14px; height: 14px; fill: none; stroke: var(--gold); stroke-width: 2; }
+    .mdesc-modal { font-size: 0.9rem; font-weight: 300; color: rgba(237,240,247,0.72); line-height: 1.8; margin-bottom: 28px; flex: 1; }
+    .mwa-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: #25D366; color: #fff; border: none; border-radius: 8px;
+      padding: 14px 24px; font-size: 0.88rem; font-weight: 600;
+      text-decoration: none; cursor: pointer; transition: all 0.3s;
+      font-family: 'Inter', sans-serif; letter-spacing: 0.02em;
+    }
+    .mwa-btn:hover { background: #1ebe59; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,211,102,0.25); }
+    .mwa-btn svg { width: 20px; height: 20px; }
+
+    /* ── TASACION ── */
+    .tasa { padding: 100px clamp(18px,4vw,60px); background: linear-gradient(135deg,#0E1C2E,#0A1420); text-align: center; position: relative; overflow: hidden; }
+    .tasa::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 55% 55% at 50% 50%, rgba(201,168,76,0.065) 0%, transparent 70%); }
+    .tasa-inner { position: relative; max-width: 580px; margin: 0 auto; }
+    .tasa-inner h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 700; margin-bottom: 14px; line-height: 1.2; }
+    .tasa-inner h2 em { color: var(--gold); font-style: italic; }
+    .tasa-inner p { color: var(--muted); font-size: 0.95rem; font-weight: 300; line-height: 1.8; margin-bottom: 34px; }
+
+    /* ── SERVICES ── */
+    .svcs { padding: var(--pad) clamp(18px,4vw,60px); background: var(--navy); }
+    .svcs-inner { max-width: 1200px; margin: 0 auto; }
+    .svcs-inner > h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem,4vw,2.8rem); font-weight: 700; margin-bottom: 48px; max-width: 560px; line-height: 1.2; }
+    .svcs-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .svc { background: var(--navy-c); border: 1px solid var(--border); border-radius: 8px; padding: 36px 28px; position: relative; overflow: hidden; transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s; }
+    .svc::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.4s; }
+    .svc:hover { transform: translateY(-5px); border-color: rgba(201,168,76,0.18); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+    .svc:hover::after { transform: scaleX(1); }
+    .svc-n { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: rgba(201,168,76,0.18); margin-bottom: 14px; line-height: 1; }
+    .svc h3 { font-family: 'Playfair Display', serif; font-size: 1.12rem; font-weight: 600; margin-bottom: 10px; }
+    .svc p { font-size: 0.85rem; font-weight: 300; color: var(--muted); line-height: 1.75; }
+
+    /* ── ABOUT ── */
+    .about { padding: var(--pad) clamp(18px,4vw,60px); background: var(--navy-m); }
+    .about-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr; gap: 80px; align-items: center; }
+    .about-vis { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .maxi-ring { width: 200px; height: 200px; border-radius: 50%; overflow: hidden; border: 2.5px solid rgba(201,168,76,0.45); box-shadow: 0 0 0 8px rgba(201,168,76,0.07), 0 20px 50px rgba(0,0,0,0.4); }
+    .maxi-ring img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transform: scale(1.65); transform-origin: 50% 30%; }
+    .maxi-cred { background: var(--gold); color: var(--navy); padding: 10px 16px; border-radius: 6px; font-size: 0.73rem; font-weight: 700; text-align: center; line-height: 1.65; }
+    .about-txt .stag { margin-bottom: 12px; }
+    .about-txt h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem,3vw,2.4rem); font-weight: 700; line-height: 1.2; margin-bottom: 18px; }
+    .about-txt h2 em { color: var(--gold); font-style: italic; }
+    .about-txt p { font-size: 0.95rem; font-weight: 300; color: rgba(237,240,247,0.72); line-height: 1.85; margin-bottom: 12px; }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .pill { border: 1px solid rgba(201,168,76,0.28); color: var(--gold); padding: 5px 13px; border-radius: 100px; font-size: 0.76rem; }
+
+    /* ── CONTACT ── */
+    .cntct { padding: var(--pad) clamp(18px,4vw,60px); background: var(--navy); }
+    .cntct-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: start; }
+    .cntct-l .stag { margin-bottom: 12px; }
+    .cntct-l h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem,3vw,2.4rem); font-weight: 700; line-height: 1.2; margin-bottom: 14px; }
+    .cntct-l p { color: var(--muted); font-size: 0.93rem; font-weight: 300; line-height: 1.8; margin-bottom: 34px; }
+    .clist { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .ci { display: flex; align-items: center; gap: 14px; }
+    .ci-ico { width: 40px; height: 40px; background: rgba(201,168,76,0.09); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ci-ico svg { width: 18px; height: 18px; fill: none; stroke: var(--gold); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .ci-lbl { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+    .ci-val { font-size: 0.88rem; color: var(--off); font-weight: 300; }
+    .ci-val a { color: inherit; text-decoration: none; transition: color 0.2s; }
+    .ci-val a:hover { color: var(--gold); }
+    .cform { background: var(--navy-c); border: 1px solid var(--border); border-radius: 10px; padding: 38px 32px; }
+    .cform h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 26px; }
+    .fr { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .fg { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .fg label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .fg input, .fg select, .fg textarea { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 5px; padding: 12px 14px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 300; outline: none; width: 100%; transition: border-color 0.3s; }
+    .fg select option { background: var(--navy-c); }
+    .fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--gold); }
+    .fg textarea { resize: vertical; min-height: 90px; }
+    .bsub {
+      width: 100%; background: #25D366; color: #fff; border: none;
+      padding: 14px; border-radius: 8px; font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; transition: all 0.3s; margin-top: 4px; font-family: 'Inter', sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .bsub:hover { background: #1ebe59; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,211,102,0.25); }
+    .bsub svg { width: 18px; height: 18px; }
+
+    /* ── FOOTER ── */
+    footer { background: #050D18; padding: 44px clamp(18px,4vw,60px) 24px; border-top: 1px solid var(--border); }
+    .foot-inner { max-width: 1200px; margin: 0 auto; }
+    .foot-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; padding-bottom: 22px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+    .foot-name { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; }
+    .foot-name span { color: var(--gold); }
+    .foot-mat { font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+    .foot-soc { display: flex; gap: 9px; }
+    .sc { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.1); border-radius: 7px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: all 0.3s; }
+    .sc:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+    .sc svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .foot-bot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .fcopy { font-size: 0.76rem; color: var(--muted); }
+    .ftag { font-size: 0.76rem; color: var(--muted); font-style: italic; }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .ra  { opacity: 0; transform: translateY(36px); transition: opacity .7s ease, transform .7s ease; }
+    .ral { opacity: 0; transform: translateX(-44px); transition: opacity .75s ease, transform .75s ease; }
+    .rar { opacity: 0; transform: translateX(44px); transition: opacity .75s ease, transform .75s ease; }
+    .ras { opacity: 0; transform: translateY(24px); transition: opacity .55s ease, transform .55s ease; }
+    .ra.in, .ral.in, .rar.in, .ras.in { opacity: 1; transform: translate(0); }
+
+    .bgold { display: inline-block; background: var(--gold); color: var(--navy); border: none; padding: 13px 34px; border-radius: 4px; font-size: 0.84rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+    .bgold:hover { background: var(--gold-l); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,168,76,0.25); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .pgrid { grid-template-columns: repeat(2,1fr); }
+      .svcs-grid { grid-template-columns: repeat(2,1fr); }
+      .about-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+      .about-vis { flex-direction: row; justify-content: center; }
+      .pills { justify-content: center; }
+      .cntct-inner { grid-template-columns: 1fr; gap: 44px; }
+      .fr { grid-template-columns: 1fr; }
+      .mbox { grid-template-columns: 1fr; }
+      .mimg-side { height: 260px; position: relative; }
+    }
+    @media (max-width: 600px) {
+      .pgrid { grid-template-columns: 1fr; }
+      .svcs-grid { grid-template-columns: 1fr; }
+      .cform { padding: 26px 20px; }
+      .mdetails { padding: 24px 20px; }
+    }
+    .nav-links.open { display: flex; flex-direction: column; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 190; background: rgba(10,20,32,0.97); align-items: center; justify-content: center; gap: 32px; }
+    .nav-links.open a { font-size: 1.2rem; color: #fff; }
+    .nav-xbtn { position: absolute; top: 22px; right: 28px; background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; line-height: 1; }
+
+    body.modal-open { overflow: hidden; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="nav">
+  <div class="nav-bar lg">
+    <a href="#inicio" class="nav-logo">
+      <!-- Casa con techo, eaves y ventana 4 paneles — igual al logo real -->
+      <svg viewBox="0 0 110 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:38px;height:auto;flex-shrink:0">
+        <!-- Roof / eaves -->
+        <polyline points="2,46 55,4 108,46" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Left wall -->
+        <line x1="16" y1="42" x2="16" y2="84" stroke="white" stroke-width="5" stroke-linecap="round"/>
+        <!-- Right wall -->
+        <line x1="94" y1="42" x2="94" y2="84" stroke="white" stroke-width="5" stroke-linecap="round"/>
+        <!-- 4-pane window in the roof peak -->
+        <rect x="40" y="19" width="30" height="25" rx="1.5" stroke="white" stroke-width="4" fill="none"/>
+        <line x1="55" y1="19" x2="55" y2="44" stroke="white" stroke-width="2.5"/>
+        <line x1="40" y1="31.5" x2="70" y2="31.5" stroke="white" stroke-width="2.5"/>
+      </svg>
+      <div>
+        <span class="nav-logo-name">OVELAR</span>
+        <span class="nav-logo-sub">Propiedades</span>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <button class="nav-xbtn" id="navX">×</button>
+      <li><a href="#propiedades">Propiedades</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <a href="#contacto" class="nav-btn">Consultar</a>
+    <button class="nav-toggle" id="navT"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="inicio">
+  <video class="hero-video" autoplay loop muted playsinline>
+    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4">
+  </video>
+  <div class="hero-fade"></div>
+  <div class="hero-content">
+    <div class="hero-grid">
+      <div>
+        <h1 class="hero-heading" id="hHead" aria-label="Encontrá tu lugar en Buenos Aires."></h1>
+        <p class="hero-sub" id="hSub">Compra, venta y alquiler de propiedades en CABA con un profesional matriculado.</p>
+        <div class="hero-btns" id="hBtns">
+          <a href="#propiedades" class="hbtn-w">Ver propiedades</a>
+          <a href="#contacto" class="hbtn-g lg">Consultar ahora</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-tag lg" id="hTag">Compra. Venta. Alquiler.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROPERTIES ── -->
+<section class="props" id="propiedades">
+  <div class="props-hdr ra">
+    <span class="stag">Propiedades disponibles</span>
+    <h2>Encontrá tu próxima propiedad</h2>
+    <div class="tabs">
+      <button class="tab on" data-f="all">Todas</button>
+      <button class="tab" data-f="venta">En Venta</button>
+      <button class="tab" data-f="alquiler">En Alquiler</button>
+    </div>
+  </div>
+  <div class="pgrid" id="pgrid">
+    <div class="pcard ras" data-id="1" data-t="venta">
+      <div class="pimg"><div class="pimg-inner c1"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge bv">Venta</span></div>
+      <div class="pbody"><div class="pprice">USD 185.000</div><div class="ptype">Departamento 3 ambientes</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Palermo Soho, CABA</div><div class="pfeats"><span class="pfeat">Balcón</span><span class="pfeat">2 baños</span><span class="pfeat">Luminoso</span></div></div>
+      <div class="pfoot"><span class="parea">82 m² totales</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+    <div class="pcard ras" data-id="2" data-t="venta">
+      <div class="pimg"><div class="pimg-inner c2"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge bv">Venta</span></div>
+      <div class="pbody"><div class="pprice">USD 260.000</div><div class="ptype">PH 4 ambientes</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Belgrano R, CABA</div><div class="pfeats"><span class="pfeat">Terraza propia</span><span class="pfeat">Cochera</span><span class="pfeat">3 baños</span></div></div>
+      <div class="pfoot"><span class="parea">115 m² totales</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+    <div class="pcard ras" data-id="3" data-t="venta">
+      <div class="pimg"><div class="pimg-inner c3"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge bv">Venta</span></div>
+      <div class="pbody"><div class="pprice">USD 148.000</div><div class="ptype">Departamento 2 ambientes</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Recoleta, CABA</div><div class="pfeats"><span class="pfeat">Piso madera</span><span class="pfeat">Piscina</span><span class="pfeat">Seguridad 24h</span></div></div>
+      <div class="pfoot"><span class="parea">58 m² totales</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+    <div class="pcard ras" data-id="4" data-t="venta">
+      <div class="pimg"><div class="pimg-inner c4"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge bv">Venta</span></div>
+      <div class="pbody"><div class="pprice">USD 350.000</div><div class="ptype">Casa 4 dormitorios</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Caballito, CABA</div><div class="pfeats"><span class="pfeat">Jardín</span><span class="pfeat">Garage doble</span><span class="pfeat">Quincho</span></div></div>
+      <div class="pfoot"><span class="parea">180 m² cubiertos</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+    <div class="pcard ras" data-id="5" data-t="alquiler">
+      <div class="pimg"><div class="pimg-inner c5"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge ba">Alquiler</span></div>
+      <div class="pbody"><div class="pprice">$1.850 / mes</div><div class="ptype">Departamento 2 ambientes</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Villa Crespo, CABA</div><div class="pfeats"><span class="pfeat">Primer piso</span><span class="pfeat">Cocina nueva</span><span class="pfeat">Soleado</span></div></div>
+      <div class="pfoot"><span class="parea">52 m² totales</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+    <div class="pcard ras" data-id="6" data-t="venta">
+      <div class="pimg"><div class="pimg-inner c6"></div><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="pbadge bv">Venta</span></div>
+      <div class="pbody"><div class="pprice">USD 285.000</div><div class="ptype">Duplex 3 dormitorios</div><div class="phood-txt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>San Isidro, GBA Norte</div><div class="pfeats"><span class="pfeat">2 plantas</span><span class="pfeat">Piscina</span><span class="pfeat">Cochera</span></div></div>
+      <div class="pfoot"><span class="parea">130 m² totales</span><button class="pcta-btn">Ver propiedad →</button></div>
+    </div>
+  </div>
+  <div class="props-more ra">
+    <p class="props-note">Propiedades de ejemplo — consultanos para ver el listado actualizado.</p>
+    <a href="#contacto" class="bgold">Ver todas las propiedades →</a>
+  </div>
+</section>
+
+<!-- ── PROPERTY MODAL ── -->
+<div class="mbg" id="mbg">
+  <div class="mbox" id="mbox">
+    <button class="mclose" id="mclose">×</button>
+    <div class="mimg-side" id="mimgSide">
+      <div class="mimg-bg-el" id="mimgBg"></div>
+      <div class="mimg-overlay">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <div class="mimg-note">📸 Fotos disponibles por WhatsApp</div>
+      </div>
+      <span class="mbadge-modal" id="mbadgeM"></span>
+    </div>
+    <div class="mdetails">
+      <div class="mprice-modal" id="mpriceM"></div>
+      <div class="mtitle-modal" id="mtitleM"></div>
+      <div class="mhood-modal">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span id="mhoodM"></span>
+      </div>
+      <div class="mfeats-modal" id="mfeatsM"></div>
+      <div class="marea-modal">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        <span id="mareaM"></span>
+      </div>
+      <p class="mdesc-modal" id="mdescM"></p>
+      <a class="mwa-btn" id="mwaBtn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.406A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.98 7.98 0 0 1-4.078-1.115l-.292-.174-3.027.854.854-3.027-.174-.292A7.97 7.97 0 0 1 4 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+        Consultar por WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ── TASACION ── -->
+<section class="tasa">
+  <div class="tasa-inner ra">
+    <span class="stag">¿Querés vender?</span>
+    <h2>Tasá tu propiedad<br><em>sin costo</em></h2>
+    <p>Obtenés una valuación profesional y precisa de tu inmueble para tomar la mejor decisión de venta o alquiler.</p>
+    <a href="#contacto" class="bgold">Solicitar tasación gratuita</a>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section class="svcs" id="servicios">
+  <div class="svcs-inner">
+    <span class="stag ra">Servicios</span>
+    <h2 class="ra">Un servicio integral<br>para cada operación</h2>
+    <div class="svcs-grid">
+      <div class="svc ras"><div class="svc-n">01</div><h3>Compra &amp; Venta</h3><p>Asesoramiento completo en todas las etapas de la operación, con respaldo legal y matriculado.</p></div>
+      <div class="svc ras"><div class="svc-n">02</div><h3>Tasaciones</h3><p>Valuación técnica y precisa de propiedades para decisiones de compra, venta y alquiler.</p></div>
+      <div class="svc ras"><div class="svc-n">03</div><h3>Alquileres &amp; Gestión</h3><p>Administración integral de alquileres, contratos y seguimiento de la propiedad.</p></div>
+      <div class="svc ras"><div class="svc-n">04</div><h3>Desarrollos</h3><p>Participación en proyectos inmobiliarios y comercialización de unidades en pozo.</p></div>
+      <div class="svc ras"><div class="svc-n">05</div><h3>Remodelaciones</h3><p>Gestión de obras para aumentar el valor de tu propiedad antes de vender o alquilar.</p></div>
+      <div class="svc ras"><div class="svc-n">06</div><h3>Obras &amp; Mantenimiento</h3><p>Contratista de obras y servicios para conservar tu inversión en óptimas condiciones.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section class="about" id="nosotros">
+  <div class="about-inner">
+    <div class="about-vis ral">
+      <div class="maxi-ring"><img src="assets/maxi.png" alt="Maximiliano Ovelar"></div>
+      <div class="maxi-cred">Matrícula CUCICBA<br>N°6598 · CABA</div>
+    </div>
+    <div class="about-txt rar">
+      <span class="stag">El profesional detrás</span>
+      <h2>Maximiliano Ovelar —<br><em>Martillero Judicial</em></h2>
+      <p>Maximiliano Ovelar es Martillero Judicial y Corredor Inmobiliario matriculado en CUCICBA, con experiencia en el mercado de Buenos Aires. Brinda un servicio integral que abarca compra, venta, alquiler, tasaciones y obras.</p>
+      <p>Cada operación cuenta con el respaldo de una matrícula habilitante que garantiza ética, transparencia y cumplimiento legal.</p>
+      <div class="pills">
+        <span class="pill">Martillero Judicial</span>
+        <span class="pill">Corredor Inmobiliario</span>
+        <span class="pill">Contratista de Obras</span>
+        <span class="pill">Buenos Aires · CABA</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section class="cntct" id="contacto">
+  <div class="cntct-inner">
+    <div class="cntct-l ral">
+      <span class="stag">Contacto</span>
+      <h2>Hablemos de tu próxima operación</h2>
+      <p>Disponible para asesorarte en cualquier etapa. Completá el formulario y te armamos un mensaje directo para WhatsApp.</p>
+      <ul class="clist">
+        <li class="ci">
+          <div class="ci-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.62 4.38 2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div><div class="ci-lbl">WhatsApp / Teléfono</div><div class="ci-val"><a href="https://wa.me/5491132116794" target="_blank">11-3211-6794</a></div></div>
+        </li>
+        <li class="ci">
+          <div class="ci-ico"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div><div class="ci-lbl">Email</div><div class="ci-val"><a href="mailto:maximilianovelar5@gmail.com">maximilianovelar5@gmail.com</a></div></div>
+        </li>
+        <li class="ci">
+          <div class="ci-ico"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+          <div><div class="ci-lbl">Instagram</div><div class="ci-val"><a href="https://instagram.com/maximiliano_ovelar" target="_blank">@maximiliano_ovelar</a></div></div>
+        </li>
+        <li class="ci">
+          <div class="ci-ico"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><div class="ci-lbl">Ubicación</div><div class="ci-val">[DIRECCIÓN AQUÍ] · Buenos Aires, CABA</div></div>
+        </li>
+      </ul>
+    </div>
+    <div class="cform rar">
+      <h3>Envianos tu consulta</h3>
+      <div class="fr">
+        <div class="fg"><label>Nombre *</label><input type="text" id="fName" placeholder="Tu nombre"></div>
+        <div class="fg"><label>Teléfono</label><input type="tel" id="fPhone" placeholder="Tu teléfono"></div>
+      </div>
+      <div class="fg"><label>Email</label><input type="email" id="fEmail" placeholder="tu@email.com"></div>
+      <div class="fg">
+        <label>¿En qué te podemos ayudar?</label>
+        <select id="fService">
+          <option value="" disabled selected>Seleccioná</option>
+          <option>Compra de propiedad</option>
+          <option>Venta de propiedad</option>
+          <option>Tasación gratuita</option>
+          <option>Alquiler</option>
+          <option>Desarrollo inmobiliario</option>
+          <option>Remodelación / Obra</option>
+          <option>Otra consulta</option>
+        </select>
+      </div>
+      <div class="fg"><label>Mensaje</label><textarea id="fMsg" placeholder="Contanos tu consulta..."></textarea></div>
+      <button class="bsub" id="bsub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.406A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.98 7.98 0 0 1-4.078-1.115l-.292-.174-3.027.854.854-3.027-.174-.292A7.97 7.97 0 0 1 4 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+        Enviar por WhatsApp
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-top">
+      <div>
+        <div class="foot-name">OVELAR <span>PROPIEDADES</span></div>
+        <div class="foot-mat">Martillero Judicial · Corredor Inmobiliario · Matrícula CUCICBA N°6598 CABA</div>
+      </div>
+      <div class="foot-soc">
+        <a href="https://instagram.com/maximiliano_ovelar" target="_blank" class="sc" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="https://wa.me/5491132116794" target="_blank" class="sc" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+        <a href="mailto:maximilianovelar5@gmail.com" class="sc" aria-label="Email"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <div class="fcopy">© 2026 Ovelar Propiedades. Todos los derechos reservados.</div>
+      <div class="ftag">Trabaja siempre con profesionales matriculados.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── PROPERTY DATA
+const PROPS = {
+  1: { type:'venta', badge:'Venta', price:'USD 185.000', title:'Departamento 3 ambientes', hood:'Palermo Soho, CABA', area:'82 m² totales', feats:['Balcón','2 baños','Luminoso','Contrafrente'], color:'c1', desc:'Amplio departamento de 3 ambientes a metros de Juan B. Justo. Living-comedor con balcón panorámico, dormitorio principal con baño en suite, segundo dormitorio y baño de visitas. Pisos de madera, cocina equipada y excelente iluminación natural. Expensas bajas. Escritura inmediata.' },
+  2: { type:'venta', badge:'Venta', price:'USD 260.000', title:'PH 4 ambientes', hood:'Belgrano R, CABA', area:'115 m² totales', feats:['Terraza propia 45m²','Cochera fija','3 baños','Seguridad 24h'], color:'c2', desc:'Exclusivo PH en el corazón de Belgrano R. Dos plantas independientes con 4 ambientes amplios, terraza propia de 45 m², cochera fija y 3 baños completos. Terminaciones de primera calidad, seguridad permanente y espectacular vista a la ciudad. Edificio boutique de categoría.' },
+  3: { type:'venta', badge:'Venta', price:'USD 148.000', title:'Departamento 2 ambientes', hood:'Recoleta, CABA', area:'58 m² totales', feats:['Piso madera','Piscina','Seguridad 24h','SUM'], color:'c3', desc:'Elegante departamento en el barrio más cotizado de Buenos Aires. Pisos de madera fina, aberturas de aluminio, 1 dormitorio amplio con vestidor y baño completo con bañera. Acceso a piscina, gimnasio y SUM. Portería las 24 horas. Excelente estado de conservación.' },
+  4: { type:'venta', badge:'Venta', price:'USD 350.000', title:'Casa 4 dormitorios', hood:'Caballito, CABA', area:'180 m² cubiertos', feats:['Jardín 80m²','Garage doble','Quincho con parrilla','4 baños'], color:'c4', desc:'Casa de categoría con jardín y quincho en Caballito. Planta baja: living amplio, comedor, cocina equipada y baño de visitas. Primer piso: 4 dormitorios y 2 baños. Garage doble, jardín trasero de 80 m² con quincho y parrilla. Ideal para familia grande. Barrio tranquilo y arbolado.' },
+  5: { type:'alquiler', badge:'Alquiler', price:'$1.850 / mes', title:'Departamento 2 ambientes', hood:'Villa Crespo, CABA', area:'52 m² totales', feats:['Primer piso','Cocina nueva','Bien iluminado','Subte B a 2 cuadras'], color:'c5', desc:'Moderno departamento de 2 ambientes en planta 1° sin paso. Cocina nueva integrada al living, baño renovado, excelente iluminación natural. Edificio con ascensor y encargado. A dos cuadras del subte B, rodeado de comercios y gastronomía. Contrato 2 años. Recibe crédito.' },
+  6: { type:'venta', badge:'Venta', price:'USD 285.000', title:'Duplex 3 dormitorios', hood:'San Isidro, GBA Norte', area:'130 m² totales', feats:['2 plantas','Piscina privada','Cochera','Jardín'], color:'c6', desc:'Espectacular duplex en zona residencial premium de San Isidro. Planta baja: living amplio, cocina americana y baño social. Planta alta: 3 dormitorios en suite y baño principal. Jardín privado con piscina, cochera descubierta y parrilla. Ideal como primera vivienda o inversión. Escritura inmediata.' }
+};
+
+// ── MOBILE NAV
+const navT=document.getElementById('navT'),navL=document.getElementById('navLinks'),navX=document.getElementById('navX');
+navT.addEventListener('click',()=>navL.classList.add('open'));
+navX.addEventListener('click',()=>navL.classList.remove('open'));
+navL.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navL.classList.remove('open')));
+
+// ── HERO CHAR ANIMATION
+(function(){
+  const lines=['Encontrá tu lugar','en Buenos Aires.'];
+  const el=document.getElementById('hHead');
+  const charDelay=30,initDelay=200;
+  lines.forEach((line,li)=>{
+    const div=document.createElement('div');
+    div.style.display='block';
+    [...line].forEach((ch,ci)=>{
+      const sp=document.createElement('span');
+      sp.className='hc';
+      sp.textContent=ch===' '?' ':ch;
+      const d=initDelay+(li*lines[0].length*charDelay)+(ci*charDelay);
+      setTimeout(()=>{sp.style.opacity='1';sp.style.transform='translateX(0)';},d);
+      div.appendChild(sp);
+    });
+    el.appendChild(div);
+  });
+  setTimeout(()=>{document.getElementById('hSub').style.opacity='1';},800);
+  setTimeout(()=>{document.getElementById('hBtns').style.opacity='1';},1200);
+  setTimeout(()=>{document.getElementById('hTag').style.opacity='1';},1400);
+})();
+
+// ── SCROLL REVEALS
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});},{threshold:0.1});
+document.querySelectorAll('.ra,.ral,.rar').forEach(el=>io.observe(el));
+['#pgrid','.svcs-grid'].forEach(sel=>{
+  const g=document.querySelector(sel);if(!g)return;
+  const kids=g.querySelectorAll('.ras,.svc');
+  const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){kids.forEach((k,i)=>setTimeout(()=>k.classList.add('in'),i*90));obs.unobserve(x.target);}});},{threshold:0.05});
+  obs.observe(g);
+});
+
+// ── FILTER TABS
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    const f=btn.dataset.f;
+    document.querySelectorAll('.pcard').forEach(c=>{c.style.display=(f==='all'||c.dataset.t===f)?'block':'none';});
+  });
+});
+
+// ── PROPERTY MODAL
+const mbg=document.getElementById('mbg');
+const modalClose=document.getElementById('mclose');
+
+function openModal(id){
+  const p=PROPS[id];if(!p)return;
+  document.getElementById('mimgBg').className='mimg-bg-el '+p.color;
+  const badge=document.getElementById('mbadgeM');
+  badge.textContent=p.badge;
+  badge.className='mbadge-modal '+(p.type==='venta'?'bv':'ba');
+  document.getElementById('mpriceM').textContent=p.price;
+  document.getElementById('mtitleM').textContent=p.title;
+  document.getElementById('mhoodM').textContent=p.hood;
+  document.getElementById('mareaM').textContent=p.area;
+  document.getElementById('mdescM').textContent=p.desc;
+  const featsEl=document.getElementById('mfeatsM');
+  featsEl.innerHTML=p.feats.map(f=>`<span class="mfeat">${f}</span>`).join('');
+  const msg=`Hola Maximiliano! Vi la siguiente propiedad en tu web y me interesa:\n\n🏠 ${p.title} — ${p.hood}\n💰 ${p.price}\n📐 ${p.area}\n✨ ${p.feats.join(' · ')}\n\n¿Podés darme más información? ¡Gracias!`;
+  document.getElementById('mwaBtn').href='https://wa.me/5491132116794?text='+encodeURIComponent(msg);
+  mbg.classList.add('open');
+  document.body.classList.add('modal-open');
+}
+
+function closeModal(){
+  mbg.classList.remove('open');
+  document.body.classList.remove('modal-open');
+}
+
+document.querySelectorAll('.pcard').forEach(card=>{
+  card.addEventListener('click',()=>openModal(parseInt(card.dataset.id)));
+});
+modalClose.addEventListener('click',closeModal);
+mbg.addEventListener('click',e=>{if(e.target===mbg)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// ── WHATSAPP FORM
+document.getElementById('bsub').addEventListener('click',()=>{
+  const name=(document.getElementById('fName').value||'').trim();
+  const phone=(document.getElementById('fPhone').value||'').trim();
+  const service=document.getElementById('fService').value||'';
+  const msg=(document.getElementById('fMsg').value||'').trim();
+
+  if(!name){
+    document.getElementById('fName').focus();
+    document.getElementById('fName').style.borderColor='#ff6b6b';
+    setTimeout(()=>document.getElementById('fName').style.borderColor='',2000);
+    return;
+  }
+
+  let text=`Hola Maximiliano! 👋 Soy *${name}*.`;
+  if(service) text+=`\nMe interesa consultar sobre: *${service}*`;
+  if(msg) text+=`\n\n${msg}`;
+  if(phone) text+=`\n\n📱 Mi teléfono: ${phone}`;
+  text+=`\n\n¡Gracias!`;
+
+  window.open('https://wa.me/5491132116794?text='+encodeURIComponent(text),'_blank');
+});
+</script>
+</body>
+</html>
